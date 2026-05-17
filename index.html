@@ -889,6 +889,7 @@
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   .viewer {
+    position: relative;
     background: var(--white);
     width: 100%;
     max-width: 1100px;
@@ -897,8 +898,165 @@
     overflow: hidden;
     box-shadow: var(--shadow-lg);
     display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto auto 1fr;
     animation: popIn 0.22s ease;
+  }
+  .viewer:fullscreen,
+  .viewer:-webkit-full-screen {
+    max-width: none;
+    max-height: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    animation: none;
+    box-shadow: none;
+  }
+  .viewer:fullscreen .viewer-body-wrap,
+  .viewer:-webkit-full-screen .viewer-body-wrap {
+    min-height: 0;
+    flex: 1;
+  }
+  .viewer:fullscreen .viewer-body-wrap .viewer-stage,
+  .viewer:-webkit-full-screen .viewer-body-wrap .viewer-stage {
+    min-height: 0;
+  }
+
+  .viewer-body-wrap {
+    position: relative;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+  }
+  .viewer-body-wrap .viewer-stage {
+    flex: 1;
+    min-height: 420px;
+  }
+
+  /* 원문 텍스트 시트 (뷰어 내부) */
+  .viewer-text-sheet {
+    position: absolute;
+    inset: 0;
+    z-index: 15;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -8px 32px rgba(19, 31, 56, 0.12);
+    animation: fadeIn 0.15s ease;
+  }
+  .viewer-text-sheet[hidden] { display: none !important; }
+  .viewer-text-sheet-head {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--beige);
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .viewer-text-sheet-head button {
+    background: transparent;
+    border: none;
+    color: var(--navy);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .viewer-text-sheet-head button:hover { background: var(--white); }
+  .viewer-text-sheet-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 20px 24px;
+    font-size: 13.5px;
+    line-height: 1.85;
+    color: var(--text);
+  }
+  .viewer-text-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--border);
+    line-height: 1.6;
+  }
+  .viewer-text-plain {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: inherit;
+  }
+
+  .viewer-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    z-index: 400;
+    background: var(--navy);
+    color: var(--beige);
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    max-width: min(420px, calc(100vw - 32px));
+    text-align: center;
+  }
+  .viewer-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .viewer-toast[hidden] { display: none !important; }
+
+  @media print {
+    body { background: #fff; }
+    .app { display: none !important; }
+    .viewer-toast { display: none !important; }
+    .viewer-overlay:not(.show) { display: none !important; }
+    .viewer-overlay.show {
+      position: static !important;
+      inset: auto !important;
+      display: block !important;
+      padding: 0 !important;
+      background: #fff !important;
+      backdrop-filter: none !important;
+      animation: none !important;
+    }
+    .viewer {
+      max-width: none !important;
+      max-height: none !important;
+      width: 100% !important;
+      height: auto !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      animation: none !important;
+    }
+    .viewer-text-sheet { display: none !important; }
+    .viewer-toolbar,
+    .viewer-foot,
+    .v-nav { display: none !important; }
+    .viewer-head .v-close { display: none !important; }
+    .viewer-stage {
+      overflow: visible !important;
+      min-height: auto !important;
+      background: #fff !important;
+      display: block !important;
+    }
+    .scan-page {
+      transform: none !important;
+      box-shadow: none !important;
+      margin: 0 auto !important;
+      page-break-inside: avoid;
+    }
   }
   @keyframes popIn {
     from { transform: scale(0.96); opacity: 0; }
@@ -1466,9 +1624,8 @@
         <div class="drawer-toolbar">
           <button class="tb-btn primary" onclick="openViewer('람바레네 방문기 — 슈바이처를 만나다', '기독교사상 제54호', 1962, 1)">⛶ 원본 이미지</button>
           <div class="tb-sep"></div>
-          <button class="tb-btn">⧉ 복사</button>
-          <button class="tb-btn">↗ 인용</button>
-          <button class="tb-btn">⤓ 다운로드</button>
+          <button type="button" class="tb-btn" onclick="copyDrawerText()">⧉ 복사</button>
+          <button type="button" class="tb-btn" onclick="downloadDrawerText()">⤓ 다운로드</button>
         </div>
 
         <div class="drawer-body">
@@ -1512,6 +1669,7 @@
       <button class="v-btn icon" onclick="zoomIn()" title="확대">＋</button>
       <button class="v-btn icon" onclick="zoomReset()" title="원본 크기">⤡</button>
       <button class="v-btn icon" onclick="zoomFit()" title="화면에 맞춤">⛶</button>
+      <button type="button" class="v-btn" id="vFullscreenBtn" onclick="toggleViewerFullscreen()" title="전체화면">⤢ 전체화면</button>
       <div class="v-sep"></div>
       <button class="v-btn icon" onclick="rotateLeft()" title="좌로 회전">↺</button>
       <button class="v-btn icon" onclick="rotateRight()" title="우로 회전">↻</button>
@@ -1522,12 +1680,12 @@
 
       <div class="v-spacer"></div>
 
-      <button class="v-btn" onclick="alert('원문 텍스트 보기로 이동')">📝 원문 텍스트</button>
-      <button class="v-btn" onclick="alert('인용 정보 복사됨')">↗ 인용</button>
-      <button class="v-btn" onclick="alert('인쇄 미리보기')">🖨 인쇄</button>
-      <button class="v-btn" onclick="alert('다운로드 시작')">⤓ 다운로드</button>
+      <button type="button" class="v-btn" onclick="openViewerOriginalText()">📝 원문 텍스트</button>
+      <button type="button" class="v-btn" onclick="printViewer()">🖨 인쇄</button>
+      <button type="button" class="v-btn" onclick="downloadViewerText()">⤓ 다운로드</button>
     </div>
 
+    <div class="viewer-body-wrap">
     <!-- 스테이지 (스캔 이미지 미리보기) -->
     <div class="viewer-stage" id="vStage">
       <button class="v-nav prev" onclick="prevPage()" title="이전 페이지">‹</button>
@@ -1566,8 +1724,19 @@
       </div>
     </div>
 
+    <div class="viewer-text-sheet" id="viewerTextSheet" hidden>
+      <div class="viewer-text-sheet-head">
+        <span>원문 텍스트 (현재 페이지 OCR)</span>
+        <button type="button" onclick="closeViewerTextSheet()" title="닫기">×</button>
+      </div>
+      <div class="viewer-text-sheet-body" id="viewerTextSheetBody"></div>
+    </div>
+    </div>
+
   </div>
 </div>
+
+<div id="viewerToast" class="viewer-toast" role="status" aria-live="polite" hidden></div>
 
 <script>
   /* ===== Drawer ===== */
@@ -1576,6 +1745,68 @@
   }
   function closeDrawer() {
     document.getElementById('chatContainer').classList.remove('drawer-open');
+  }
+
+  async function copyTextToClipboard(text) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        throw new Error('no clipboard');
+      }
+    } catch (err) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  }
+
+  function buildDrawerExportText() {
+    const root = document.querySelector('.drawer');
+    const body = root && root.querySelector('.drawer-body');
+    if (!body) return '';
+    const meta = root.querySelector('.drawer-meta');
+    const header = root.querySelector('.drawer-header h3');
+    let pre = '';
+    if (header) pre += header.innerText.replace(/\s+/g, ' ').trim() + '\n\n';
+    if (meta) pre += meta.innerText.replace(/\n{2,}/g, '\n').trim() + '\n\n---\n\n';
+    return pre + body.innerText.replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  function drawerTitleForFilename() {
+    const h3 = document.querySelector('.drawer-header h3');
+    if (!h3) return 'document';
+    return h3.innerText.replace(/\s+/g, ' ').trim().replace(/^REPR\s*/i, '').trim() || 'document';
+  }
+
+  async function copyDrawerText() {
+    const text = buildDrawerExportText();
+    if (!text) return;
+    await copyTextToClipboard(text);
+    showViewerToast('텍스트가 클립보드에 복사되었습니다.');
+  }
+
+  function downloadDrawerText() {
+    const text = buildDrawerExportText();
+    if (!text) return;
+    const name = sanitizeDownloadFilename(drawerTitleForFilename());
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name + '.txt';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showViewerToast('텍스트 파일(.txt)을 다운로드했습니다.');
   }
   function toggleAdv() {
     document.getElementById('advPanel').classList.toggle('show');
@@ -1662,13 +1893,126 @@
     renderViewer();
     document.getElementById('viewerOverlay').classList.add('show');
     document.body.style.overflow = 'hidden';
+    syncFullscreenButton();
   }
+  function getFullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement;
+  }
+
+  function exitViewerFullscreenIfNeeded() {
+    const viewer = document.getElementById('viewer');
+    if (getFullscreenElement() === viewer) {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) exit.call(document);
+    }
+  }
+
+  function syncFullscreenButton() {
+    const btn = document.getElementById('vFullscreenBtn');
+    if (!btn) return;
+    const viewer = document.getElementById('viewer');
+    const on = getFullscreenElement() === viewer;
+    btn.textContent = on ? '⤓ 창 모드' : '⤢ 전체화면';
+    btn.title = on ? '전체화면 종료' : '전체화면';
+  }
+
+  function toggleViewerFullscreen() {
+    const viewer = document.getElementById('viewer');
+    if (getFullscreenElement() !== viewer) {
+      const req = viewer.requestFullscreen || viewer.webkitRequestFullscreen;
+      if (req) req.call(viewer);
+    } else {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) exit.call(document);
+    }
+  }
+
+  document.addEventListener('fullscreenchange', syncFullscreenButton);
+  document.addEventListener('webkitfullscreenchange', syncFullscreenButton);
+
   function closeViewer() {
+    exitViewerFullscreenIfNeeded();
+    closeViewerTextSheet();
     document.getElementById('viewerOverlay').classList.remove('show');
     document.body.style.overflow = '';
+    syncFullscreenButton();
   }
   function onOverlayClick(e) {
     if (e.target.id === 'viewerOverlay') closeViewer();
+  }
+
+  let viewerToastTimer = null;
+  function showViewerToast(message) {
+    const el = document.getElementById('viewerToast');
+    if (!el) return;
+    el.hidden = false;
+    el.textContent = message;
+    el.classList.add('show');
+    clearTimeout(viewerToastTimer);
+    viewerToastTimer = setTimeout(() => {
+      el.classList.remove('show');
+      clearTimeout(viewerToastTimer);
+      viewerToastTimer = setTimeout(() => { el.hidden = true; }, 220);
+    }, 2400);
+  }
+
+  function closeViewerTextSheet() {
+    const sheet = document.getElementById('viewerTextSheet');
+    if (sheet) sheet.hidden = true;
+  }
+
+  function openViewerOriginalText() {
+    const sheet = document.getElementById('viewerTextSheet');
+    const body = document.getElementById('viewerTextSheetBody');
+    if (!sheet || !body) return;
+    body.textContent = '';
+    const meta = document.createElement('p');
+    meta.className = 'viewer-text-meta';
+    const face = viewerState.startPage + viewerState.current - 1;
+    meta.textContent = `${viewerState.title} · ${viewerState.sub} · 뷰어 ${viewerState.current}/${viewerState.total}쪽 (면 ${face})`;
+    const plain = document.createElement('div');
+    plain.className = 'viewer-text-plain';
+    const scan = document.getElementById('vScanPage');
+    plain.textContent = scan ? scan.innerText.replace(/\n{3,}/g, '\n\n').trim() : '';
+    body.appendChild(meta);
+    body.appendChild(plain);
+    sheet.hidden = false;
+  }
+
+  function buildCitationString() {
+    const face = viewerState.startPage + viewerState.current - 1;
+    const archive = '이일선 목사 디지털 아카이브';
+    return `「${viewerState.title}」 ${viewerState.sub}. ${face}면. ${archive}.`;
+  }
+
+  function printViewer() {
+    exitViewerFullscreenIfNeeded();
+    requestAnimationFrame(() => window.print());
+  }
+
+  function sanitizeDownloadFilename(name) {
+    return String(name || 'document')
+      .replace(/[\\/:*?"<>|]/g, '_')
+      .replace(/\s+/g, '_')
+      .slice(0, 80) || 'document';
+  }
+
+  function downloadViewerText() {
+    const face = viewerState.startPage + viewerState.current - 1;
+    const header = [buildCitationString(), '', '--- 원문 텍스트 (현재 페이지) ---', ''].join('\n');
+    const scan = document.getElementById('vScanPage');
+    const body = scan ? scan.innerText.replace(/\n{3,}/g, '\n\n').trim() : '';
+    const blob = new Blob([header + body], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = sanitizeDownloadFilename(viewerState.title) + '_' + face + '면.txt';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showViewerToast('텍스트 파일(.txt)을 다운로드했습니다.');
   }
 
   function zoomIn()    { viewerState.zoom = Math.min(viewerState.zoom + 0.15, 3); renderViewer(); }
@@ -1691,7 +2035,20 @@
   document.addEventListener('keydown', (e) => {
     const open = document.getElementById('viewerOverlay').classList.contains('show');
     if (!open) return;
-    if (e.key === 'Escape') closeViewer();
+    if (e.key === 'Escape') {
+      const sheet = document.getElementById('viewerTextSheet');
+      if (sheet && !sheet.hidden) {
+        closeViewerTextSheet();
+        return;
+      }
+      const viewer = document.getElementById('viewer');
+      if (getFullscreenElement() === viewer) {
+        const exit = document.exitFullscreen || document.webkitExitFullscreen;
+        if (exit) exit.call(document);
+      } else {
+        closeViewer();
+      }
+    }
     if (e.key === 'ArrowLeft') prevPage();
     if (e.key === 'ArrowRight') nextPage();
     if (e.key === '+' || e.key === '=') zoomIn();

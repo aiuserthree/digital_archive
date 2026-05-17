@@ -8,12 +8,19 @@ alwaysApply: true
 사용자가 이 프로젝트에서 **Vercel 배포**를 요청하면 **아래 프로덕션만** 사용한다.
 
 - **프로덕션 URL:** [https://digital-archive-phi.vercel.app/](https://digital-archive-phi.vercel.app/)
-- **배포 디렉터리:** 저장소 루트의 `UI 시안/` (이 폴더에 `vercel.json`이 있음)
+
+## 어떤 파일이 공개 홈인지 (중요)
+
+Vercel **Root Directory** 설정에 따라 다르다.
+
+- **Root = 저장소 루트(`.`)** 인 경우(현재 [digital-archive-phi](https://digital-archive-phi.vercel.app/)에 해당): 정적 사이트 기본 진입은 **`index.html`**. `UI 시안/챗봇(연구자).html`만 고치면 **프로덕션 `/`에는 반영되지 않는다.** 연구자 시안을 수정한 뒤 **`index.html`에 동기화**하거나, 대시보드에서 Root를 `UI 시안`으로 바꾸고 `vercel.json`으로 `/` 목적지를 맞춘다.
+- **Root = `UI 시안`** 인 경우: 해당 폴더 기준이며 `UI 시안/vercel.json`의 rewrite가 적용된다.
 
 ## 절차
 
-1. 작업 디렉터리: `UI 시안`
-2. `npx vercel deploy --prod` 등으로 배포할 때, 로컬 `.vercel` 링크가 **다른 프로젝트**(예: `digital-archive-chat-standalone`)를 가리키면 **`vercel link`로 `digital-archive-phi` 프로젝트를 선택**한 뒤 다시 프로덕션 배포한다.
-3. **`digital-archive-chat-standalone` 등 다른 Vercel 프로젝트로 프로덕션 배포하지 않는다.**
+1. 프로덕션이 루트 `index.html`을 쓰는지, `UI 시안`만 쓰는지 먼저 확인한다.
+2. `npx vercel deploy --prod` 실행 시 **업로드되는 디렉터리**가 Vercel Root와 같아야 한다. (루트 연동이면 저장소 루트 변경분을 **Git 푸시**하는 것이 맞는 경우가 많다.)
+3. 로컬 `.vercel` 링크가 **다른 프로젝트**를 가리키면 **`vercel link --project digital-archive-phi`** 후 배포한다.
+4. **`digital-archive-chat-standalone` 등 다른 Vercel 프로젝트로 프로덕션 배포하지 않는다.**
 
-Git 연동만 쓰는 경우에도 Vercel 대시보드에서 **이 저장소의 배포가 `digital-archive-phi`와 연결**되어 있는지 확인하는 것을 전제로 한다.
+Vercel 대시보드에서 이 저장소·브랜치가 `digital-archive-phi`와 연결돼 있는지도 유지한다.
