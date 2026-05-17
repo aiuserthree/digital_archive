@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/_ _ _ _standalone_.html"
+    }
+  ]
+}
