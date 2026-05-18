@@ -9,12 +9,14 @@ alwaysApply: true
 
 - **프로덕션 URL:** [https://digital-archive-phi.vercel.app/](https://digital-archive-phi.vercel.app/)
 - **Root Directory:** 반드시 **`UI 시안`** (Vercel 프로젝트 설정 → General → Root Directory). 저장소 루트(`.`)로 두지 않는다.
-- **진입 경로:** `UI 시안/vercel.json`의 rewrite로 **`/` → `챗봇(연구자).html`**. (Vercel이 괄호를 라우트로 해석하므로 `destination`은 **퍼센트 인코딩된 경로**를 쓴다.) 연구자 UI 본문은 **`UI 시안/챗봇(연구자).html`** 만 수정한다.
+- **진입 경로:** `UI 시안/vercel.json`의 rewrite로 **`/` → `챗봇(연구자).html`**. (Vercel이 괄호를 라우트로 해석하므로 `destination`은 **퍼센트 인코딩된 경로**를 쓴다.)
+- **연구자 화면 수정 시:** 편집은 **`UI 시안/챗봇(연구자).html`** 을 기준으로 하고, 같은 내용을 **`index.html`(저장소 루트)** 에도 반드시 복사해 둔다. (`cp "UI 시안/챗봇(연구자).html" index.html`). Vercel Root가 잠깐 루트(`.`)로 잡히거나 로컬에서 루트를 열어도 동일 시안이 보이게 하기 위함이다.
 
 ## 절차
 
 1. 대시보드에서 `digital-archive-phi`의 Root Directory가 **`UI 시안`** 인지 확인한다. 바꾼 직후에는 Redeploy가 필요할 수 있다.
 2. CLI 배포 시 디렉터리: **`UI 시안`** (`cd UI 시안` 후 `npx vercel deploy --prod`). 링크가 꼬이면 `npx vercel link --project digital-archive-phi --yes`.
 3. **`digital-archive-chat-standalone` 등 다른 프로젝트로 프로덕션 배포하지 않는다.**
+4. **`UI 시안/챗봇(연구자).html`** 을 수정한 뒤에는 저장소 루트 **`index.html`** 을 동일 내용으로 맞춘 뒤 **같은 커밋**에 포함한다.
 
 Git 연동 시에도 동일하게 Root Directory **`UI 시안`** 이어야 `vercel.json`이 적용된다.
