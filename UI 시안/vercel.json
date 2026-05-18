@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/_ _ _ _standalone_.html"
+      "destination": "/챗봇(연구자).html"
     }
   ]
 }
