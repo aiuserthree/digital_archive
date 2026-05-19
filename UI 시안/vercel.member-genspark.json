@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/%EC%84%B1%EB%8F%84%EC%9A%A9%20%EC%B1%97%EB%B4%87%28%EC%A0%A0%EC%8A%A4%ED%8C%8C%ED%81%AC%29.html"
+      "destination": "/%E1%84%89%E1%85%A5%E1%86%BC%E1%84%83%E1%85%A9%E1%84%8B%E1%85%AD%E1%86%BC%20%E1%84%8E%E1%85%A2%E1%86%BA%E1%84%87%E1%85%A9%E1%86%BA%28%E1%84%8C%E1%85%A6%E1%86%AB%E1%84%89%E1%85%B3%E1%84%91%E1%85%A1%E1%84%8F%E1%85%B3%29.html"
     }
   ]
 }
