@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/%EC%B1%97%EB%B4%87%28%EC%97%B0%EA%B5%AC%EC%9E%90%29.html"
+      "destination": "/%EC%97%B0%EA%B5%AC%EC%9E%90%EC%9A%A9%20%EC%B1%97%EB%B4%87%28%EC%A0%A0%EC%8A%A4%ED%8C%8C%ED%81%AC%29.html"
     }
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/%EC%84%B1%EB%8F%84%EC%9A%A9%20%EC%B1%97%EB%B4%87%28%EC%A0%A0%EC%8A%A4%ED%8C%8C%ED%81%AC%29.html"
+    }
+  ]
+}

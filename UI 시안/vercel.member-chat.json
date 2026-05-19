@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/chat%20for%20member.html"
+    }
+  ]
+}
