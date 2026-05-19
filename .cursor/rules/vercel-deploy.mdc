@@ -11,8 +11,8 @@ alwaysApply: true
 |-----------------|-------------|-----------|----------------|
 | `digital-archive-phi` | https://digital-archive-phi.vercel.app/ | `vercel.json` | `연구자용 챗봇(젠스파크).html` |
 | `digital-archive-chat-standalone` | https://digital-archive-chat-standalone.vercel.app/ | `vercel.standalone.json` | `chat for theologian.html` |
-| `digital-archive-member-genspark` | (배포 후 대시보드 URL) | `vercel.member-genspark.json` | `성도용 챗봇(젠스파크).html` |
-| `digital-archive-member-chat` | (배포 후 대시보드 URL) | `vercel.member-chat.json` | `chat for member.html` |
+| `digital-archive-member-genspark` | https://digital-archive-member-genspark.vercel.app/ | `vercel.member-genspark.json` | `성도용 챗봇(젠스파크).html` |
+| `digital-archive-member-chat` | https://digital-archive-member-chat.vercel.app/ | `vercel.member-chat.json` | `chat for member.html` |
 
 `destination`에는 공백·한글·괄호를 **퍼센트 인코딩**한다.
 
