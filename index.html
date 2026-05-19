@@ -1212,79 +1212,33 @@
   .v-nav.prev { left: 12px; }
   .v-nav.next { right: 12px; }
 
-  /* "Scanned page" mock */
+  /* 원본 스캔 이미지 */
   .scan-page {
-    background: #fdf8ec;
-    box-shadow: 0 6px 26px rgba(0,0,0,0.35);
     transform: scale(1);
-    transform-origin: center;
+    transform-origin: center center;
     transition: transform 0.2s ease;
-    margin: 24px;
-    width: 520px;
-    aspect-ratio: 3 / 4;
+    margin: auto;
     position: relative;
-    overflow: hidden;
+    max-width: min(520px, 90vw);
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+    align-self: center;
+    flex-shrink: 0;
+  }
+  .scan-photo {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 520px;
+    max-height: calc(100vh - 200px);
+    height: auto;
+    object-fit: contain;
+    box-shadow: 0 6px 26px rgba(0,0,0,0.35);
     border: 1px solid #d6c9a4;
-  }
-  .scan-page::before {
-    /* aged paper grain */
-    content: '';
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse at 25% 20%, rgba(120, 90, 30, 0.06), transparent 60%),
-      radial-gradient(ellipse at 80% 70%, rgba(120, 90, 30, 0.08), transparent 55%),
-      radial-gradient(circle at 70% 30%, rgba(110, 70, 20, 0.07), transparent 40%),
-      linear-gradient(180deg, #fbf3e0, #fdf8ec 50%, #f5ead0);
-    pointer-events: none;
-  }
-  .scan-page::after {
-    /* center crease */
-    content: '';
-    position: absolute;
-    top: 0; bottom: 0; left: 50%;
-    width: 1px;
-    background: linear-gradient(180deg, transparent, rgba(80,50,10,0.18) 50%, transparent);
-    box-shadow: -8px 0 18px -10px rgba(0,0,0,0.18), 8px 0 18px -10px rgba(0,0,0,0.18);
-    pointer-events: none;
-  }
-  .scan-inner {
-    position: relative;
-    z-index: 1;
-    height: 100%;
-    padding: 38px 46px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    color: #3a2a10;
-    font-family: 'Pretendard Variable', serif;
-  }
-  .scan-col {
-    border-left: 1px solid rgba(80, 50, 10, 0.18);
-    padding-left: 14px;
-  }
-  .scan-col:first-child { border-left: none; padding-left: 0; }
-  .scan-col h5 {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: #2b1f08;
-    letter-spacing: 0.04em;
-    border-bottom: 1px solid rgba(80,50,10,0.25);
-    padding-bottom: 6px;
-  }
-  .scan-col p {
-    font-size: 12.5px;
-    line-height: 1.9;
-    margin-bottom: 10px;
-    text-align: justify;
-    word-break: keep-all;
-  }
-  .scan-col .marg {
-    font-size: 10.5px;
-    color: rgba(80, 50, 10, 0.6);
-    margin-top: 18px;
-    text-align: right;
-    font-style: italic;
+    user-select: none;
+    -webkit-user-drag: none;
   }
   .scan-pagenum {
     position: absolute;
@@ -1754,22 +1708,7 @@
       <button class="v-nav prev" onclick="prevPage()" title="이전 페이지">‹</button>
 
       <div class="scan-page" id="vScanPage">
-        <div class="scan-inner">
-          <div class="scan-col">
-            <h5>람바레네에서의 일주일</h5>
-            <p>가봉의 람바레네에 도착한 것은 一九六二年 八月의 어느 무더운 오후였다. 적도의 태양은 강물 위에서 쉴 새 없이 흔들렸고, 슈바이처 博士의 病院은 그 강가에 묵묵히 서 있었다.</p>
-            <p>博士는 八十六세의 고령에도 불구하고 매일 새벽 다섯 시에 일어나 환자들을 돌보았다. 그는 나에게 "生命에 대한 畏敬(Ehrfurcht vor dem Leben)이야말로 모든 倫理의 출발점이며, 또한 그 終着點입니다"라고 말했다.</p>
-            <p>이 말씀은 나의 牧會生涯 전체를 관통하는 하나의 命題가 되었다.</p>
-            <div class="marg">— 일선 記</div>
-          </div>
-          <div class="scan-col">
-            <h5></h5>
-            <p>韓國으로 돌아온 後에도 나는 줄곧 이 思想을 어떻게 우리 土壤에 심을 수 있을지를 苦悶해왔다. 生命에 대한 畏敬은 곧 創造主에 대한 畏敬이며, 이는 抽象的 觀念이 아니라 매일의 牧會現場 — 병자를 돌보고, 가난한 자를 입히며, 絶望한 자에게 손 내미는 일 — 그 자체로 具現되어야 한다.</p>
-            <p>슈바이처 博士는 떠나는 나에게 한 권의 책을 건넸다. 그 책의 첫 페이지에는 독일어로 이렇게 쓰여 있었다. "동방의 형제에게 — 生命은 하나입니다."</p>
-            <p>이 말은 지금도 나의 책상 위에 놓여 있다.</p>
-            <div class="marg">「基督敎思想」 54號</div>
-          </div>
-        </div>
+        <img class="scan-photo" src="UI 시안/img/page-1.png" alt="원본 스캔 이미지" draggable="false">
         <div class="scan-pagenum" id="vScanPageNum">— 78 —</div>
       </div>
 
