@@ -1359,11 +1359,38 @@
   ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 4px; }
   ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.22); }
 
+  /* ===== 새 대화 / 대화 중 ===== */
+  .app:not(.chatting) .chat-thread { display: none; }
+  .app.chatting .chat-welcome { display: none; }
+
+  .chat-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: min(420px, 55vh);
+    text-align: center;
+    padding: 24px 16px 40px;
+  }
+  .chat-welcome h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .chat-welcome p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.75;
+    max-width: 420px;
+  }
+
 </style>
 </head>
 <body>
 
-<div class="app">
+<div class="app" id="app">
 
   <!-- ===== Sidebar ===== -->
   <aside class="sidebar">
@@ -1376,7 +1403,7 @@
     </div>
 
     <div class="sidebar-header">
-      <button class="new-chat-btn">＋ 새 대화 시작</button>
+      <button type="button" class="new-chat-btn" onclick="newChat()">＋ 새 대화 시작</button>
     </div>
 
     <div class="conv-search">
@@ -1385,7 +1412,7 @@
 
     <div class="conv-list">
       <div class="conv-group-title">오늘</div>
-      <div class="conv-item active">
+      <div class="conv-item" data-title="슈바이처와의 신학적 영향관계">
         <span class="conv-title">슈바이처와의 신학적 영향관계</span>
         <button class="conv-delete">×</button>
       </div>
@@ -1467,6 +1494,12 @@
         <div class="messages">
           <div class="messages-inner">
 
+            <div class="chat-welcome">
+              <h2>연구 질문을 시작하세요</h2>
+              <p>이일선 목사 아카이브의 설교, 저서, 논문 등 1,247건의 자료를 바탕으로 답변합니다.<br>오른쪽 추천 질문을 선택하거나 아래에 직접 입력해 보세요.</p>
+            </div>
+
+            <div class="chat-thread">
             <!-- User message -->
             <div class="msg msg-user">
               <div class="bubble">
@@ -1549,6 +1582,8 @@
               </div>
             </div>
 
+            </div>
+
           </div>
         </div>
 
@@ -1569,7 +1604,7 @@
             <div class="input-row">
               <textarea rows="2" placeholder="아카이브 자료에 대해 질문하세요. 예: 이일선 목사의 1960년대 설교에서 반복되는 주제는 무엇인가요?"></textarea>
               <button class="adv-toggle" id="advToggle" onclick="toggleAdv()">고급 설정</button>
-              <button class="send-btn"><span class="ico">↑</span> 전송</button>
+              <button type="button" class="send-btn" id="sendBtn"><span class="ico">↑</span> 전송</button>
             </div>
 
             <div class="adv-panel" id="advPanel">
@@ -1767,6 +1802,59 @@
 <div id="viewerToast" class="viewer-toast" role="status" aria-live="polite" hidden></div>
 
 <script>
+  /* ===== Chat state (새 대화 / 대화 중) ===== */
+  const app = document.getElementById('app');
+  const chatInput = document.querySelector('.input-row textarea');
+  const sendBtn = document.getElementById('sendBtn');
+
+  function setActiveConv(el) {
+    document.querySelectorAll('.conv-item').forEach(c => c.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+
+  function newChat() {
+    app.classList.remove('chatting');
+    setActiveConv(null);
+    closeDrawer();
+    if (chatInput) {
+      chatInput.value = '';
+      chatInput.focus();
+    }
+    document.querySelector('.messages')?.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function startChat(questionText) {
+    app.classList.add('chatting');
+    closeDrawer();
+    if (questionText && chatInput) {
+      chatInput.value = questionText;
+      chatInput.focus();
+    }
+    document.querySelector('.messages')?.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.ob-q-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const tag = card.querySelector('.q-tag');
+      const q = card.textContent.replace(tag ? tag.textContent : '', '').trim();
+      startChat(q);
+    });
+  });
+
+  if (sendBtn && chatInput) {
+    sendBtn.addEventListener('click', () => {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      startChat(text);
+    });
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendBtn.click();
+      }
+    });
+  }
+
   /* ===== Drawer ===== */
   function openDrawer() {
     document.getElementById('chatContainer').classList.add('drawer-open');
@@ -1853,8 +1941,8 @@
   document.querySelectorAll('.conv-item').forEach(it => {
     it.addEventListener('click', (e) => {
       if (e.target.closest('.conv-delete')) return;
-      document.querySelectorAll('.conv-item').forEach(x => x.classList.remove('active'));
-      it.classList.add('active');
+      setActiveConv(it);
+      startChat('');
     });
   });
 

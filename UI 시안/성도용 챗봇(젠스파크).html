@@ -1,869 +1,920 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>쉬운 말씀 챗 — 편하게 물어보세요</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<style>
+ :root {
+ --sidebar-w: 256px;
+ --content-w: 760px;
+ --app-w: calc(var(--sidebar-w) * 2 + var(--content-w));
+ --bg: #FAF8F5;
+ --surface: #FFFFFF;
+ --surface-soft: #F4F1EC;
+ --primary: #5A7D6E;
+ --primary-soft: #E8EFEB;
+ --primary-dark: #455F54;
+ --accent: #E8B86D;
+ --text: #2D2A26;
+ --text-soft: #6B6660;
+ --text-mute: #A8A39C;
+ --border: #EDE8E0;
+ --user-bubble: #5A7D6E;
+ --ai-bubble: #FFFFFF;
+ --shadow: 0 1px 2px rgba(45, 42, 38, 0.04), 0 4px 12px rgba(45, 42, 38, 0.04);
+ }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ button { font-family: inherit; cursor: pointer; }
+ html, body {
+ height: 100%;
+ font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+ background: var(--bg);
+ color: var(--text);
+ font-size: 15px;
+ line-height: 1.65;
+ -webkit-font-smoothing: antialiased;
+ }
+ body {
+ display: flex;
+ justify-content: center;
+ }
+ .app {
+ display: grid;
+ grid-template-columns: var(--sidebar-w) var(--content-w) var(--sidebar-w);
+ width: min(var(--app-w), 100%);
+ max-width: var(--app-w);
+ min-height: 100vh;
+ height: 100vh;
+ margin: 0 auto;
+ background: var(--bg);
+ box-shadow: 0 0 0 1px var(--border);
+ }
+ /* ===== Sidebar ===== */
+ .sidebar {
+ grid-column: 1;
+ width: var(--sidebar-w);
+ background: var(--bg);
+ border-right: 1px solid var(--border);
+ display: flex;
+ flex-direction: column;
+ padding: 18px 14px;
+ }
+ .brand {
+ padding: 6px 10px 18px;
+ }
+ .brand-title {
+ font-size: 15px;
+ font-weight: 700;
+ color: var(--text);
+ letter-spacing: -0.01em;
+ }
+ .brand-sub {
+ font-size: 12px;
+ color: var(--text-mute);
+ margin-top: 2px;
+ }
+ .new-chat {
+ width: 100%;
+ background: var(--text);
+ color: var(--bg);
+ border: none;
+ padding: 11px 14px;
+ border-radius: 12px;
+ font-family: inherit;
+ font-size: 13.5px;
+ font-weight: 600;
+ cursor: pointer;
+ transition: transform 0.1s, background 0.15s;
+ }
+ .new-chat:hover { background: #000; }
+ .new-chat:active { transform: scale(0.98); }
+ .conv-list {
+ flex: 1;
+ overflow-y: auto;
+ margin-top: 18px;
+ }
+ .conv-group {
+ font-size: 11px;
+ font-weight: 600;
+ color: var(--text-mute);
+ padding: 14px 10px 6px;
+ letter-spacing: 0.02em;
+ }
+ .conv {
+ position: relative;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: 9px 10px;
+ border-radius: 9px;
+ cursor: pointer;
+ font-size: 13.5px;
+ color: var(--text-soft);
+ transition: background 0.12s;
+ }
+ .conv:hover { background: var(--surface-soft); }
+ .conv.active {
+ background: var(--primary-soft);
+ color: var(--primary-dark);
+ font-weight: 500;
+ }
+ .conv-title {
+ flex: 1;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ }
+ .conv-del {
+ opacity: 0;
+ background: none;
+ border: none;
+ color: var(--text-mute);
+ font-size: 16px;
+ cursor: pointer;
+ padding: 0 4px;
+ border-radius: 4px;
+ line-height: 1;
+ }
+ .conv:hover .conv-del { opacity: 1; }
+ .conv-del:hover { color: var(--text); }
+ .sidebar-footer {
+ padding: 10px 12px;
+ border-top: 1px solid var(--border);
+ margin-top: 8px;
+ }
+ .user-mini {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ padding: 6px;
+ border-radius: 9px;
+ cursor: pointer;
+ transition: background 0.12s;
+ }
+ .user-mini:hover { background: var(--surface-soft); }
+ .avatar {
+ width: 30px;
+ height: 30px;
+ background: var(--primary);
+ color: white;
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 12px;
+ font-weight: 600;
+ flex-shrink: 0;
+ }
+ .user-mini-info {
+ font-size: 12.5px;
+ color: var(--text);
+ line-height: 1.3;
+ }
+ .user-mini-info small {
+ color: var(--text-mute);
+ font-size: 11px;
+ }
+ /* ===== Main ===== */
+ .main {
+ grid-column: 2;
+ display: flex;
+ flex-direction: column;
+ background: var(--bg);
+ min-width: 0;
+ width: var(--content-w);
+ max-width: 100%;
+ position: relative;
+ border-right: 1px solid var(--border);
+ }
+ .layout-rail {
+ grid-column: 3;
+ width: var(--sidebar-w);
+ background: var(--bg);
+ min-height: 0;
+ }
+ .top-bar {
+ width: 100%;
+ padding: 16px 28px;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ }
+ .top-title {
+ font-size: 14px;
+ font-weight: 600;
+ color: var(--text);
+ }
+ .top-title small {
+ color: var(--text-mute);
+ font-weight: 400;
+ margin-left: 8px;
+ }
+ .top-actions {
+ display: flex;
+ gap: 8px;
+ }
+ .top-btn {
+ background: var(--surface);
+ border: 1px solid var(--border);
+ color: var(--text-soft);
+ padding: 7px 14px;
+ border-radius: 9px;
+ font-family: inherit;
+ font-size: 12.5px;
+ cursor: pointer;
+ transition: all 0.15s;
+ }
+ .top-btn:hover { border-color: var(--primary); color: var(--primary); }
+ /* ===== Chat scroll ===== */
+ .chat-scroll {
+ flex: 1;
+ width: 100%;
+ overflow-y: auto;
+ padding: 8px 28px 24px;
+ }
+ .chat-inner {
+ width: 100%;
+ }
+ /* Welcome */
+ .welcome {
+ text-align: center;
+ padding: 40px 20px 30px;
+ }
+ .welcome h1 {
+ font-size: 28px;
+ font-weight: 700;
+ color: var(--text);
+ letter-spacing: -0.02em;
+ margin-bottom: 10px;
+ }
+ .welcome h1 .wave {
+ display: inline-block;
+ transform-origin: 70% 70%;
+ animation: wave 2.4s ease-in-out infinite;
+ }
+ @keyframes wave {
+ 0%, 60%, 100% { transform: rotate(0); }
+ 10%, 30% { transform: rotate(14deg); }
+ 20% { transform: rotate(-8deg); }
+ 40% { transform: rotate(10deg); }
+ 50% { transform: rotate(0); }
+ }
+ .welcome p {
+ color: var(--text-soft);
+ font-size: 14.5px;
+ max-width: 460px;
+ margin: 0 auto;
+ }
+ /* Suggestion chips */
+ .suggestions {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 10px;
+ margin: 28px auto 52px;
+ max-width: 640px;
+ }
+ .suggestions + .msg {
+ margin-top: 12px;
+ }
+ .sg-card {
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-radius: 14px;
+ padding: 14px 16px;
+ cursor: pointer;
+ text-align: left;
+ font-family: inherit;
+ transition: all 0.18s;
+ }
+ .sg-card:hover {
+ border-color: var(--primary);
+ transform: translateY(-1px);
+ box-shadow: var(--shadow);
+ }
+ .sg-tag {
+ font-size: 11px;
+ color: var(--primary);
+ font-weight: 600;
+ margin-bottom: 4px;
+ letter-spacing: 0.02em;
+ }
+ .sg-text {
+ font-size: 13.5px;
+ color: var(--text);
+ line-height: 1.5;
+ }
+ /* Messages */
+ .msg {
+ display: flex;
+ margin-bottom: 22px;
+ animation: fadeIn 0.3s ease;
+ }
+ @keyframes fadeIn {
+ from { opacity: 0; transform: translateY(6px); }
+ to { opacity: 1; transform: translateY(0); }
+ }
+ .msg.user { justify-content: flex-end; }
+ .msg.user .bubble {
+ background: var(--user-bubble);
+ color: white;
+ padding: 12px 18px;
+ border-radius: 18px 18px 4px 18px;
+ max-width: 75%;
+ font-size: 14.5px;
+ line-height: 1.6;
+ }
+ .msg.ai {
+ align-items: flex-start;
+ gap: 12px;
+ }
+ .ai-avatar {
+ width: 36px;
+ height: 36px;
+ background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+ color: white;
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 13px;
+ font-weight: 700;
+ flex-shrink: 0;
+ margin-top: 2px;
+ }
+ .msg.ai .bubble {
+ background: var(--ai-bubble);
+ border: 1px solid var(--border);
+ padding: 16px 20px;
+ border-radius: 4px 18px 18px 18px;
+ max-width: calc(100% - 50px);
+ font-size: 14.5px;
+ line-height: 1.75;
+ color: var(--text);
+ box-shadow: var(--shadow);
+ }
+ .msg.ai .bubble p { margin-bottom: 10px; }
+ .msg.ai .bubble p:last-of-type { margin-bottom: 0; }
+ .msg.ai .bubble .verse {
+ background: var(--surface-soft);
+ border-left: 3px solid var(--accent);
+ padding: 10px 14px;
+ border-radius: 4px 10px 10px 4px;
+ font-size: 13.5px;
+ color: var(--text-soft);
+ margin: 10px 0;
+ font-style: italic;
+ }
+ .cite {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ min-width: 18px;
+ height: 18px;
+ padding: 0 5px;
+ margin: 0 1px;
+ background: var(--primary-soft);
+ color: var(--primary-dark);
+ border-radius: 5px;
+ font-size: 11px;
+ font-weight: 600;
+ cursor: pointer;
+ vertical-align: text-top;
+ transition: all 0.15s;
+ }
+ .cite:hover {
+ background: var(--primary);
+ color: white;
+ }
+ .msg-actions {
+ display: flex;
+ gap: 6px;
+ margin-top: 10px;
+ padding-top: 10px;
+ border-top: 1px solid var(--border);
+ }
+ .msg-action {
+ background: none;
+ border: none;
+ color: var(--text-mute);
+ font-size: 12px;
+ cursor: pointer;
+ padding: 4px 8px;
+ border-radius: 6px;
+ font-family: inherit;
+ transition: all 0.12s;
+ }
+ .msg-action:hover {
+ background: var(--surface-soft);
+ color: var(--text);
+ }
+ /* Source pills under AI msg */
+ .source-pills {
+ margin-top: 12px;
+ display: flex;
+ gap: 6px;
+ flex-wrap: wrap;
+ }
+ .pill {
+ background: var(--surface-soft);
+ border: 1px solid var(--border);
+ color: var(--text-soft);
+ padding: 5px 10px;
+ border-radius: 999px;
+ font-size: 11.5px;
+ cursor: pointer;
+ transition: all 0.15s;
+ }
+ .pill:hover {
+ background: var(--primary-soft);
+ color: var(--primary-dark);
+ border-color: var(--primary-soft);
+ }
+ .pill strong {
+ color: var(--primary);
+ font-weight: 600;
+ margin-right: 4px;
+ }
+ /* ===== Composer ===== */
+ .composer-wrap {
+ width: 100%;
+ padding: 12px 28px 22px;
+ background: linear-gradient(to bottom, transparent, var(--bg) 30%);
+ }
+ .composer {
+ width: 100%;
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-radius: 22px;
+ padding: 12px 14px 10px;
+ box-shadow: var(--shadow);
+ transition: border-color 0.15s, box-shadow 0.15s;
+ }
+ .composer:focus-within {
+ border-color: var(--primary);
+ box-shadow: 0 0 0 4px var(--primary-soft);
+ }
+ .composer textarea {
+ width: 100%;
+ border: none;
+ outline: none;
+ resize: none;
+ font-family: inherit;
+ font-size: 14.5px;
+ line-height: 1.6;
+ color: var(--text);
+ background: transparent;
+ max-height: 160px;
+ padding: 4px 6px;
+ }
+ .composer textarea::placeholder { color: var(--text-mute); }
+ .composer-row {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-top: 6px;
+ padding: 0 4px;
+ }
+ .composer-left {
+ display: flex;
+ gap: 6px;
+ }
+ .mini-btn {
+ background: var(--surface-soft);
+ border: none;
+ color: var(--text-soft);
+ padding: 6px 12px;
+ border-radius: 999px;
+ font-family: inherit;
+ font-size: 12px;
+ cursor: pointer;
+ transition: all 0.15s;
+ }
+ .mini-btn:hover { background: var(--primary-soft); color: var(--primary-dark); }
+ .mini-btn.active { background: var(--primary); color: white; }
+ .send-btn {
+ background: var(--primary);
+ color: white;
+ border: none;
+ width: 36px;
+ height: 36px;
+ border-radius: 50%;
+ font-family: inherit;
+ font-size: 16px;
+ font-weight: 700;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ transition: all 0.15s;
+ }
+ .send-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
+ .send-btn:disabled {
+ background: var(--surface-soft);
+ color: var(--text-mute);
+ cursor: not-allowed;
+ transform: none;
+ }
+ .composer-hint {
+ text-align: center;
+ font-size: 11.5px;
+ color: var(--text-mute);
+ margin-top: 10px;
+ }
+ /* ===== Drawer ===== */
+ .drawer-backdrop {
+ position: absolute;
+ inset: 0;
+ background: rgba(45, 42, 38, 0.18);
+ opacity: 0;
+ pointer-events: none;
+ transition: opacity 0.25s;
+ z-index: 9;
+ }
+ .drawer {
+ position: absolute;
+ top: 0;
+ right: 0;
+ bottom: 0;
+ width: 440px;
+ background: var(--surface);
+ border-left: 1px solid var(--border);
+ transform: translateX(100%);
+ transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+ display: flex;
+ flex-direction: column;
+ z-index: 10;
+ box-shadow: -8px 0 24px rgba(45, 42, 38, 0.06);
+ }
+ .app.drawer-open .drawer { transform: translateX(0); }
+ .app.drawer-open .drawer-backdrop { opacity: 1; pointer-events: auto; }
+ .drawer-header {
+ padding: 18px 22px;
+ border-bottom: 1px solid var(--border);
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ }
+ .drawer-title {
+ font-size: 14px;
+ font-weight: 700;
+ color: var(--text);
+ }
+ .drawer-title small {
+ display: block;
+ font-size: 11.5px;
+ color: var(--text-mute);
+ font-weight: 400;
+ margin-top: 2px;
+ }
+ .drawer-close {
+ background: var(--surface-soft);
+ border: none;
+ width: 30px;
+ height: 30px;
+ border-radius: 50%;
+ font-size: 14px;
+ color: var(--text-soft);
+ cursor: pointer;
+ transition: all 0.15s;
+ }
+ .drawer-close:hover { background: var(--border); color: var(--text); }
+ .drawer-info {
+ padding: 14px 22px;
+ background: var(--surface-soft);
+ border-bottom: 1px solid var(--border);
+ font-size: 12.5px;
+ }
+ .drawer-info-row {
+ display: flex;
+ justify-content: space-between;
+ padding: 3px 0;
+ }
+ .drawer-info-row span { color: var(--text-mute); }
+ .drawer-info-row strong { color: var(--text); font-weight: 500; }
+ .drawer-body {
+ flex: 1;
+ overflow-y: auto;
+ padding: 22px;
+ font-size: 14px;
+ line-height: 1.85;
+ color: var(--text);
+ }
+ .drawer-body h3 {
+ font-size: 16px;
+ font-weight: 700;
+ color: var(--text);
+ margin-bottom: 14px;
+ }
+ .drawer-body p { margin-bottom: 12px; color: var(--text-soft); }
+ .drawer-body .hl {
+ background: rgba(232, 184, 109, 0.25);
+ padding: 1px 4px;
+ border-radius: 3px;
+ color: var(--text);
+ }
+ /* Scrollbar */
+ ::-webkit-scrollbar { width: 8px; }
+ ::-webkit-scrollbar-track { background: transparent; }
+ ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 4px; }
+ ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.18); }
+ /* 새 대화 vs 대화 중 */
+ .app:not(.chatting) .chat-thread { display: none; }
+ .app:not(.chatting) .top-title .chat-label { display: none; }
+ .app:not(.chatting) .top-actions { display: none; }
+ .app.chatting .welcome,
+ .app.chatting .suggestions { display: none; }
+ .app.chatting .top-title .home-label { display: none; }
+ @media (max-width: 900px) {
+ body { display: block; }
+ .app {
+ display: flex;
+ flex-direction: column;
+ width: 100%;
+ max-width: none;
+ height: auto;
+ min-height: 100vh;
+ box-shadow: none;
+ }
+ .sidebar,
+ .main,
+ .layout-rail {
+ grid-column: auto;
+ width: 100%;
+ }
+ .main { border-right: none; }
+ .layout-rail { display: none; }
+ .sidebar {
+ border-right: none;
+ border-bottom: 1px solid var(--border);
+ max-height: 42vh;
+ }
+ .conv-list { margin-top: 10px; }
+ .suggestions { grid-template-columns: 1fr; }
+ .drawer { width: min(100%, 440px); }
+ .top-bar, .chat-scroll, .composer-wrap {
+ padding-left: 16px;
+ padding-right: 16px;
+ }
+ }
+</style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="ko"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1">&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1">&lt;title&gt;쉬운 말씀 챗 — 편하게 물어보세요&lt;/title&gt;</p>
-<p class="p1">&lt;link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" /&gt;</p>
-<p class="p1">&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>:root {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--bg: #FAF8F5;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--surface: #FFFFFF;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--surface-soft: #F4F1EC;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--primary: #5A7D6E;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--primary-soft: #E8EFEB;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--primary-dark: #455F54;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--accent: #E8B86D;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--text: #2D2A26;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--text-soft: #6B6660;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--text-mute: #A8A39C;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--border: #EDE8E0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--user-bubble: #5A7D6E;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--ai-bubble: #FFFFFF;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--shadow: 0 1px 2px rgba(45, 42, 38, 0.04), 0 4px 12px rgba(45, 42, 38, 0.04);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>* { box-sizing: border-box; margin: 0; padding: 0; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>html, body {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>height: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--bg);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.65;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>-webkit-font-smoothing: antialiased;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.app {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>max-width: 1280px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--bg);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* ===== Sidebar ===== */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.sidebar {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>width: 256px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--bg);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-right: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 18px 14px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.brand {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 6px 10px 18px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.brand-title {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: -0.01em;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.brand-sub {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-mute);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 2px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.new-chat {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--bg);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 11px 14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 13.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: transform 0.1s, background 0.15s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.new-chat:hover { background: #000; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.new-chat:active { transform: scale(0.98); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.conv-list {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex: 1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>overflow-y: auto;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 18px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.conv-group {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 11px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-mute);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 14px 10px 6px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: 0.02em;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.conv {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 9px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 9px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 13.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: background 0.12s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.conv:hover { background: var(--surface-soft); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.conv.active {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--primary-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--primary-dark);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 500;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.conv-title {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex: 1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>white-space: nowrap;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>text-overflow: ellipsis;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.conv-del {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>opacity: 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-mute);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 0 4px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.conv:hover .conv-del { opacity: 1; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.conv-del:hover { color: var(--text); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.sidebar-footer {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 10px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-top: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.user-mini {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>gap: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 6px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 9px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: background 0.12s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.user-mini:hover { background: var(--surface-soft); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.avatar {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>width: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>height: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex-shrink: 0;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.user-mini-info {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 12.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.3;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.user-mini-info small {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-mute);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 11px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* ===== Main ===== */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.main {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex: 1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--bg);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>min-width: 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.top-bar {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 16px 28px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.top-title {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.top-title small {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-mute);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 400;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-left: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.top-actions {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>gap: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.top-btn {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 7px 14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 9px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 12.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.15s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.top-btn:hover { border-color: var(--primary); color: var(--primary); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* ===== Chat scroll ===== */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.chat-scroll {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex: 1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>overflow-y: auto;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 8px 28px 24px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.chat-inner {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>max-width: 760px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* Welcome */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.welcome {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 40px 20px 30px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.welcome h1 {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 28px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: -0.02em;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.welcome h1 .wave {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: inline-block;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transform-origin: 70% 70%;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>animation: wave 2.4s ease-in-out infinite;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>@keyframes wave {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>0%, 60%, 100% { transform: rotate(0); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>10%, 30% { transform: rotate(14deg); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>20% { transform: rotate(-8deg); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>40% { transform: rotate(10deg); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>50% { transform: rotate(0); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.welcome p {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 14.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>max-width: 460px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* Suggestion chips */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.suggestions {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: grid;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>grid-template-columns: 1fr 1fr;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>gap: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin: 28px auto 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>max-width: 640px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.sg-card {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 14px 16px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>text-align: left;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.18s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.sg-card:hover {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transform: translateY(-1px);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>box-shadow: var(--shadow);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.sg-tag {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 11px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>letter-spacing: 0.02em;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.sg-text {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 13.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.5;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* Messages */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 22px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>animation: fadeIn 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>@keyframes fadeIn {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>from { opacity: 0; transform: translateY(6px); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>to { opacity: 1; transform: translateY(0); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg.user { justify-content: flex-end; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg.user .bubble {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--user-bubble);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 12px 18px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 18px 18px 4px 18px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>max-width: 75%;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 14.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.6;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg.ai {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>align-items: flex-start;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>gap: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.ai-avatar {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>width: 36px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>height: 36px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: linear-gradient(135deg, var(--primary), var(--primary-dark));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 13px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex-shrink: 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 2px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg.ai .bubble {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--ai-bubble);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 16px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 4px 18px 18px 18px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>max-width: calc(100% - 50px);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 14.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.75;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>box-shadow: var(--shadow);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg.ai .bubble p { margin-bottom: 10px; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg.ai .bubble p:last-of-type { margin-bottom: 0; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg.ai .bubble .verse {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-left: 3px solid var(--accent);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 10px 14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 4px 10px 10px 4px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 13.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin: 10px 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-style: italic;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.cite {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: inline-flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>min-width: 18px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>height: 18px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 0 5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin: 0 1px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--primary-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--primary-dark);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 11px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>vertical-align: text-top;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.15s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.cite:hover {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg-actions {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>gap: 6px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding-top: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-top: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg-action {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-mute);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 4px 8px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 6px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.12s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.msg-action:hover {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* Source pills under AI msg */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.source-pills {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>gap: 6px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex-wrap: wrap;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.pill {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 5px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 999px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 11.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.15s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.pill:hover {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--primary-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--primary-dark);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-color: var(--primary-soft);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.pill strong {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-right: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* ===== Composer ===== */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.composer-wrap {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 12px 28px 22px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: linear-gradient(to bottom, transparent, var(--bg) 30%);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.composer {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>max-width: 760px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 22px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 12px 14px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>box-shadow: var(--shadow);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: border-color 0.15s, box-shadow 0.15s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.composer:focus-within {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>box-shadow: 0 0 0 4px var(--primary-soft);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.composer textarea {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>outline: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>resize: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 14.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.6;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: transparent;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>max-height: 160px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 4px 6px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.composer textarea::placeholder { color: var(--text-mute); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.composer-row {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 6px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 0 4px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.composer-left {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>gap: 6px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.mini-btn {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 6px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 999px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.15s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.mini-btn:hover { background: var(--primary-soft); color: var(--primary-dark); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.mini-btn.active { background: var(--primary); color: white; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.send-btn {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>width: 36px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>height: 36px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.15s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.send-btn:hover { background: var(--primary-dark); transform: scale(1.05); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.send-btn:disabled {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-mute);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: not-allowed;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transform: none;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.composer-hint {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 11.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-mute);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* ===== Drawer ===== */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-backdrop {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>inset: 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: rgba(45, 42, 38, 0.18);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>opacity: 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>pointer-events: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: opacity 0.25s;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>z-index: 9;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>top: 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>right: 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>bottom: 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>width: 440px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-left: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transform: translateX(100%);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>z-index: 10;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>box-shadow: -8px 0 24px rgba(45, 42, 38, 0.06);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.app.drawer-open .drawer { transform: translateX(0); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.app.drawer-open .drawer-backdrop { opacity: 1; pointer-events: auto; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-header {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 18px 22px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-bottom: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-title {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-title small {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 11.5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-mute);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 400;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-top: 2px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-close {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>width: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>height: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition: all 0.15s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-close:hover { background: var(--border); color: var(--text); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-info {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 14px 22px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: var(--surface-soft);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-bottom: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 12.5px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-info-row {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>justify-content: space-between;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 3px 0;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-info-row span { color: var(--text-mute); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-info-row strong { color: var(--text); font-weight: 500; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-body {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex: 1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>overflow-y: auto;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 22px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>line-height: 1.85;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-body h3 {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-size: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>margin-bottom: 14px;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-body p { margin-bottom: 12px; color: var(--text-soft); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.drawer-body .hl {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background: rgba(232, 184, 109, 0.25);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>padding: 1px 4px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-radius: 3px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color: var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* Scrollbar */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>::-webkit-scrollbar { width: 8px; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>::-webkit-scrollbar-track { background: transparent; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 4px; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.18); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* Hide welcome when chatting */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.app.chatting .welcome,</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.app.chatting .suggestions { display: none; }</p>
-<p class="p1">&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;div class="app chatting" id="app"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Sidebar --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;aside class="sidebar"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="brand"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="brand-title"&gt;쉬운 말씀 챗&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="brand-sub"&gt;편하게 물어보세요&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="new-chat" onclick="newChat()"&gt;+ 새 대화&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="conv-list"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="conv-group"&gt;오늘&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="conv active"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="conv-title"&gt;기도가 왜 중요한가요?&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="conv-del"&gt;×&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="conv"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="conv-title"&gt;힘들 때 어떻게 해야 할까요&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="conv-del"&gt;×&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="conv-group"&gt;이번 주&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="conv"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="conv-title"&gt;감사가 무엇인가요&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="conv-del"&gt;×&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="conv"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="conv-title"&gt;용서에 대해서&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="conv-del"&gt;×&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="conv"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="conv-title"&gt;교회 출석의 의미&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="conv-del"&gt;×&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="conv-group"&gt;지난 달&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="conv"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="conv-title"&gt;사랑한다는 것은&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="conv-del"&gt;×&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="conv"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="conv-title"&gt;믿음을 키우는 법&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="conv-del"&gt;×&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="sidebar-footer"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="user-mini"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="avatar"&gt;성&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="user-mini-info"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>성도님&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;small&gt;익명 세션&lt;/small&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/aside&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Main --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;main class="main"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="top-bar"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="top-title"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>기도가 왜 중요한가요?</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;small&gt;방금 전&lt;/small&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="top-actions"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="top-btn"&gt;대화 저장&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="top-btn"&gt;공유&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="chat-scroll"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="chat-inner"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Welcome (hidden when chatting) --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="welcome"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;h1&gt;안녕하세요&lt;span class="wave"&gt;👋&lt;/span&gt;&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;p&gt;이일선 목사님의 말씀을 바탕으로 신앙의 질문에 쉽고 따뜻하게 답해드려요. 무엇이든 편하게 물어보세요.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="suggestions"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="sg-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="sg-tag"&gt;신앙 기초&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="sg-text"&gt;기도는 왜 중요한가요?&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="sg-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="sg-tag"&gt;위로&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="sg-text"&gt;힘들 때 어떻게 해야 할까요?&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="sg-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="sg-tag"&gt;말씀 묵상&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="sg-text"&gt;하나님의 사랑을 어떻게 느낄 수 있나요?&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="sg-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="sg-tag"&gt;일상 적용&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="sg-text"&gt;감사하는 마음을 어떻게 가질까요?&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- User message --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="msg user"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bubble"&gt;기도는 왜 중요한가요? 솔직히 잘 모르겠어요.&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- AI message --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="msg ai"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="ai-avatar"&gt;말씀&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="bubble"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;좋은 질문이에요. 많은 분들이 비슷한 고민을 하시거든요.&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;이일선 목사님은 기도를 &lt;strong&gt;"하나님과의 가장 가까운 대화"&lt;/strong&gt;라고 표현하셨어요&lt;span class="cite" onclick="openDrawer()"&gt;1&lt;/span&gt;. 어렵게 격식을 차린 말을 해야 하는 게 아니라, 친구에게 마음을 털어놓듯이 솔직하게 이야기하면 된다고 하셨죠.&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="verse"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>"쉬지 말고 기도하라" — 데살로니가전서 5장 17절</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;기도가 중요한 이유는 크게 세 가지예요. 첫째, 하나님과 가까워지는 시간이 되고요. 둘째, 내 마음의 무거운 짐을 내려놓을 수 있어요. 셋째, 일상 속에서 평안을 얻게 됩니다&lt;span class="cite" onclick="openDrawer()"&gt;2&lt;/span&gt;.&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;처음부터 길게 할 필요는 없어요. 하루 5분, "오늘 하루 감사합니다"라는 한 문장으로 시작해보세요.&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="source-pills"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;button class="pill" onclick="openDrawer()"&gt;&lt;strong&gt;1&lt;/strong&gt;기도의 깊이&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;button class="pill" onclick="openDrawer()"&gt;&lt;strong&gt;2&lt;/strong&gt;일상의 기도&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="msg-actions"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;button class="msg-action"&gt;복사&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;button class="msg-action"&gt;도움됐어요&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;button class="msg-action"&gt;다시 답변&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Composer --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="composer-wrap"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="composer"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;textarea rows="1" placeholder="궁금한 점을 편하게 적어주세요"&gt;&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="composer-row"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="composer-left"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="mini-btn active"&gt;쉽게 답변&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="mini-btn"&gt;출처 보기&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="send-btn" id="sendBtn"&gt;↑&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="composer-hint"&gt;답변은 AI가 생성하며 참고용입니다. 신앙적 결정은 신뢰할 수 있는 분과 상의해주세요.&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Drawer backdrop --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="drawer-backdrop" onclick="closeDrawer()"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Drawer --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;aside class="drawer"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="drawer-header"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="drawer-title"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>기도의 깊이</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;small&gt;1965년 주일 설교&lt;/small&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="drawer-close" onclick="closeDrawer()"&gt;×&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="drawer-info"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="drawer-info-row"&gt;&lt;span&gt;자료 유형&lt;/span&gt;&lt;strong&gt;설교&lt;/strong&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="drawer-info-row"&gt;&lt;span&gt;날짜&lt;/span&gt;&lt;strong&gt;1965년 4월 11일&lt;/strong&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="drawer-info-row"&gt;&lt;span&gt;본문&lt;/span&gt;&lt;strong&gt;마태복음 6:9-13&lt;/strong&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="drawer-body"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;기도란 무엇인가&lt;/h3&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;여러분, 기도가 무엇이라고 생각하십니까. 많은 분들이 기도를 어렵게 생각하시는 것 같습니다. 무슨 거창한 말을 해야 할 것 같고, 격식을 차려야 할 것 같고, 그래서 입을 떼지 못하시는 분들이 많습니다.&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;&lt;span class="hl"&gt;기도는 하나님과의 가장 가까운 대화입니다.&lt;/span&gt; 아버지와 아들이 마주 앉아서 도란도란 이야기를 나누는 것처럼, 우리도 하나님 앞에 나아가서 솔직하게 우리의 마음을 털어놓는 것, 그것이 바로 기도입니다.&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;예수님께서는 우리에게 어떻게 기도하라고 가르치셨습니까. "하늘에 계신 우리 아버지여" 라고 부르라고 하셨습니다. 아버지를 부르는 자식의 마음, 그것이 기도의 출발점입니다.&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;오늘 우리가 살아가는 일상의 모든 순간이 기도의 자리입니다. 부엌에서 설거지하면서도, 일터에서 일하면서도, 잠자리에 들면서도 우리는 하나님과 이야기할 수 있습니다.&lt;/p&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;형제 자매 여러분, 오늘부터 기도를 시작해보십시오. 거창하지 않아도 됩니다. "하나님 감사합니다" 한 마디면 충분합니다.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/aside&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/main&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function openDrawer() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('app').classList.add('drawer-open');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function closeDrawer() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('app').classList.remove('drawer-open');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>function newChat() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('app').classList.remove('chatting');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>closeDrawer();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Suggestion card click → start chat</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll('.sg-card').forEach(c =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>c.addEventListener('click', () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('app').classList.add('chatting');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Mini-btn toggle</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll('.mini-btn').forEach(b =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>b.addEventListener('click', () =&gt; b.classList.toggle('active'));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Textarea auto-resize</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const ta = document.querySelector('.composer textarea');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ta.addEventListener('input', () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ta.style.height = 'auto';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ta.style.height = Math.min(ta.scrollHeight, 160) + 'px';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+<div class="app" id="app">
+ <!-- Sidebar -->
+ <aside class="sidebar">
+ <div class="brand">
+ <div class="brand-title">쉬운 말씀 챗</div>
+ <div class="brand-sub">편하게 물어보세요</div>
+ </div>
+ <button class="new-chat" onclick="newChat()">+ 새 대화</button>
+ <div class="conv-list">
+ <div class="conv-group">오늘</div>
+ <div class="conv" data-title="기도가 왜 중요한가요?">
+ <span class="conv-title">기도가 왜 중요한가요?</span>
+ <button class="conv-del">×</button>
+ </div>
+ <div class="conv">
+ <span class="conv-title">힘들 때 어떻게 해야 할까요</span>
+ <button class="conv-del">×</button>
+ </div>
+ <div class="conv-group">이번 주</div>
+ <div class="conv">
+ <span class="conv-title">감사가 무엇인가요</span>
+ <button class="conv-del">×</button>
+ </div>
+ <div class="conv">
+ <span class="conv-title">용서에 대해서</span>
+ <button class="conv-del">×</button>
+ </div>
+ <div class="conv">
+ <span class="conv-title">교회 출석의 의미</span>
+ <button class="conv-del">×</button>
+ </div>
+ <div class="conv-group">지난 달</div>
+ <div class="conv">
+ <span class="conv-title">사랑한다는 것은</span>
+ <button class="conv-del">×</button>
+ </div>
+ <div class="conv">
+ <span class="conv-title">믿음을 키우는 법</span>
+ <button class="conv-del">×</button>
+ </div>
+ </div>
+ <div class="sidebar-footer">
+ <div class="user-mini">
+ <div class="avatar">성</div>
+ <div class="user-mini-info">
+ 성도님<br>
+ <small>익명 세션</small>
+ </div>
+ </div>
+ </div>
+ </aside>
+ <!-- Main -->
+ <main class="main">
+ <div class="top-bar">
+ <div class="top-title" id="topTitle">
+ <span class="home-label">쉬운 말씀 챗</span>
+ <span class="chat-label">기도가 왜 중요한가요?<small>방금 전</small></span>
+ </div>
+ <div class="top-actions">
+ <button class="top-btn">대화 저장</button>
+ <button class="top-btn">공유</button>
+ </div>
+ </div>
+ <div class="chat-scroll">
+ <div class="chat-inner">
+ <!-- Welcome (hidden when chatting) -->
+ <div class="welcome">
+ <h1>안녕하세요<span class="wave">👋</span></h1>
+ <p>이일선 목사님의 말씀을 바탕으로 신앙의 질문에 쉽고 따뜻하게 답해드려요.<br>무엇이든 편하게 물어보세요.</p>
+ </div>
+ <div class="suggestions">
+ <button class="sg-card">
+ <div class="sg-tag">신앙 기초</div>
+ <div class="sg-text">기도는 왜 중요한가요?</div>
+ </button>
+ <button class="sg-card">
+ <div class="sg-tag">위로</div>
+ <div class="sg-text">힘들 때 어떻게 해야 할까요?</div>
+ </button>
+ <button class="sg-card">
+ <div class="sg-tag">말씀 묵상</div>
+ <div class="sg-text">하나님의 사랑을 어떻게 느낄 수 있나요?</div>
+ </button>
+ <button class="sg-card">
+ <div class="sg-tag">일상 적용</div>
+ <div class="sg-text">감사하는 마음을 어떻게 가질까요?</div>
+ </button>
+ </div>
+ <div class="chat-thread">
+ <!-- User message -->
+ <div class="msg user">
+ <div class="bubble">기도는 왜 중요한가요? 솔직히 잘 모르겠어요.</div>
+ </div>
+ <!-- AI message -->
+ <div class="msg ai">
+ <div class="ai-avatar">말씀</div>
+ <div class="bubble">
+ <p>좋은 질문이에요. 많은 분들이 비슷한 고민을 하시거든요.</p>
+ <p>이일선 목사님은 기도를 <strong>"하나님과의 가장 가까운 대화"</strong>라고 표현하셨어요<span class="cite" onclick="openDrawer()">1</span>. 어렵게 격식을 차린 말을 해야 하는 게 아니라, 친구에게 마음을 털어놓듯이 솔직하게 이야기하면 된다고 하셨죠.</p>
+ <div class="verse">
+ "쉬지 말고 기도하라" — 데살로니가전서 5장 17절
+ </div>
+ <p>기도가 중요한 이유는 크게 세 가지예요. 첫째, 하나님과 가까워지는 시간이 되고요. 둘째, 내 마음의 무거운 짐을 내려놓을 수 있어요. 셋째, 일상 속에서 평안을 얻게 됩니다<span class="cite" onclick="openDrawer()">2</span>.</p>
+ <p>처음부터 길게 할 필요는 없어요. 하루 5분, "오늘 하루 감사합니다"라는 한 문장으로 시작해보세요.</p>
+ <div class="source-pills">
+ <button class="pill" onclick="openDrawer()"><strong>1</strong>기도의 깊이</button>
+ <button class="pill" onclick="openDrawer()"><strong>2</strong>일상의 기도</button>
+ </div>
+ <div class="msg-actions">
+ <button class="msg-action">복사</button>
+ <button class="msg-action">도움됐어요</button>
+ <button class="msg-action">다시 답변</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ <!-- Composer -->
+ <div class="composer-wrap">
+ <div class="composer">
+ <textarea rows="1" placeholder="궁금한 점을 편하게 적어주세요"></textarea>
+ <div class="composer-row">
+ <div class="composer-left">
+ <button class="mini-btn active">쉽게 답변</button>
+ <button class="mini-btn">출처 보기</button>
+ </div>
+ <button class="send-btn" id="sendBtn">↑</button>
+ </div>
+ </div>
+ <div class="composer-hint">답변은 AI가 생성하며 참고용입니다. 신앙적 결정은 신뢰할 수 있는 분과 상의해주세요.</div>
+ </div>
+ <!-- Drawer backdrop -->
+ <div class="drawer-backdrop" onclick="closeDrawer()"></div>
+ <!-- Drawer -->
+ <aside class="drawer">
+ <div class="drawer-header">
+ <div class="drawer-title">
+ 기도의 깊이
+ <small>1965년 주일 설교</small>
+ </div>
+ <button class="drawer-close" onclick="closeDrawer()">×</button>
+ </div>
+ <div class="drawer-info">
+ <div class="drawer-info-row"><span>자료 유형</span><strong>설교</strong></div>
+ <div class="drawer-info-row"><span>날짜</span><strong>1965년 4월 11일</strong></div>
+ <div class="drawer-info-row"><span>본문</span><strong>마태복음 6:9-13</strong></div>
+ </div>
+ <div class="drawer-body">
+ <h3>기도란 무엇인가</h3>
+ <p>여러분, 기도가 무엇이라고 생각하십니까. 많은 분들이 기도를 어렵게 생각하시는 것 같습니다. 무슨 거창한 말을 해야 할 것 같고, 격식을 차려야 할 것 같고, 그래서 입을 떼지 못하시는 분들이 많습니다.</p>
+ <p><span class="hl">기도는 하나님과의 가장 가까운 대화입니다.</span> 아버지와 아들이 마주 앉아서 도란도란 이야기를 나누는 것처럼, 우리도 하나님 앞에 나아가서 솔직하게 우리의 마음을 털어놓는 것, 그것이 바로 기도입니다.</p>
+ <p>예수님께서는 우리에게 어떻게 기도하라고 가르치셨습니까. "하늘에 계신 우리 아버지여" 라고 부르라고 하셨습니다. 아버지를 부르는 자식의 마음, 그것이 기도의 출발점입니다.</p>
+ <p>오늘 우리가 살아가는 일상의 모든 순간이 기도의 자리입니다. 부엌에서 설거지하면서도, 일터에서 일하면서도, 잠자리에 들면서도 우리는 하나님과 이야기할 수 있습니다.</p>
+ <p>형제 자매 여러분, 오늘부터 기도를 시작해보십시오. 거창하지 않아도 됩니다. "하나님 감사합니다" 한 마디면 충분합니다.</p>
+ </div>
+ </aside>
+ </main>
+ <div class="layout-rail" aria-hidden="true"></div>
+</div>
+<script>
+ function openDrawer() {
+ document.getElementById('app').classList.add('drawer-open');
+ }
+ function closeDrawer() {
+ document.getElementById('app').classList.remove('drawer-open');
+ }
+ const app = document.getElementById('app');
+ const ta = document.querySelector('.composer textarea');
+ const sendBtn = document.getElementById('sendBtn');
+ const chatLabel = document.querySelector('.top-title .chat-label');
+
+ function setChatTitle(title) {
+ if (!chatLabel) return;
+ const label = title || '새 대화';
+ chatLabel.innerHTML = label + '<small>방금 전</small>';
+ }
+
+ function setActiveConv(el) {
+ document.querySelectorAll('.conv.active').forEach(c => c.classList.remove('active'));
+ if (el) el.classList.add('active');
+ }
+
+ function newChat() {
+ app.classList.remove('chatting');
+ closeDrawer();
+ setActiveConv(null);
+ setChatTitle('');
+ if (ta) {
+ ta.value = '';
+ resizeTextarea();
+ }
+ document.querySelector('.chat-scroll')?.scrollTo({ top: 0, behavior: 'smooth' });
+ }
+
+ function startChat(text, title) {
+ app.classList.add('chatting');
+ setChatTitle(title || text || '새 대화');
+ if (text && ta) {
+ ta.value = text;
+ ta.dispatchEvent(new Event('input'));
+ ta.focus();
+ }
+ document.querySelector('.chat-scroll')?.scrollTo({ top: 0, behavior: 'smooth' });
+ }
+
+ document.querySelectorAll('.sg-card').forEach(card => {
+ card.addEventListener('click', () => {
+ const q = card.querySelector('.sg-text')?.textContent?.trim();
+ const conv = [...document.querySelectorAll('.conv')].find(
+ c => c.querySelector('.conv-title')?.textContent?.trim() === q
+ );
+ setActiveConv(conv || null);
+ startChat(q || '', q);
+ });
+ });
+
+ document.querySelectorAll('.conv').forEach(conv => {
+ conv.addEventListener('click', e => {
+ if (e.target.closest('.conv-del')) return;
+ setActiveConv(conv);
+ const title = conv.dataset.title || conv.querySelector('.conv-title')?.textContent?.trim();
+ if (title?.includes('기도')) startChat('', title);
+ else startChat('', title);
+ });
+ });
+
+ document.querySelectorAll('.mini-btn').forEach(btn => {
+ btn.addEventListener('click', () => {
+ document.querySelectorAll('.mini-btn').forEach(b => b.classList.remove('active'));
+ btn.classList.add('active');
+ });
+ });
+
+ function resizeTextarea() {
+ ta.style.height = 'auto';
+ ta.style.height = Math.min(ta.scrollHeight, 160) + 'px';
+ sendBtn.disabled = !ta.value.trim();
+ }
+
+ ta.addEventListener('input', resizeTextarea);
+ sendBtn.addEventListener('click', () => {
+ const text = ta.value.trim();
+ if (!text) return;
+ startChat(text, text);
+ ta.value = '';
+ resizeTextarea();
+ });
+
+ document.addEventListener('keydown', e => {
+ if (e.key === 'Escape') closeDrawer();
+ });
+
+ resizeTextarea();
+</script>
 </body>
 </html>
