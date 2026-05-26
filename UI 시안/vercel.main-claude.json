@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/main%28claude%29.html"
+    }
+  ]
+}

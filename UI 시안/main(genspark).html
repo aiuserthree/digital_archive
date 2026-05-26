@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이일선 목사 디지털 아카이브 | 사진과 기록으로 보는 생애와 목회</title>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --sepia-dark:  #3a2f25;
+    --sepia-mid:   #6b5640;
+    --sepia-light: #a08a6f;
+    --cream:       #f4ecd8;
+    --cream-light: #faf6ec;
+    --paper:       #ede1c8;
+    --accent:      #8b4513;
+    --gold:        #b8935a;
+    --ink:         #2b2419;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+    background: var(--cream-light);
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ===== Top Bar ===== */
+  .top-bar {
+    background: var(--sepia-dark);
+    color: var(--cream);
+    padding: 8px 0;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .top-bar .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .top-bar a {
+    color: var(--cream);
+    text-decoration: none;
+    margin-left: 18px;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+  }
+  .top-bar a:hover { opacity: 1; }
+
+  /* ===== Header / Nav ===== */
+  header {
+    background: var(--cream-light);
+    border-bottom: 1px solid rgba(107, 86, 64, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(58, 47, 37, 0.06);
+  }
+  .nav-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    font-family: 'Nanum Myeongjo', serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--sepia-dark);
+    letter-spacing: 2px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.2;
+  }
+  .logo small {
+    display: block;
+    font-size: 11px;
+    color: var(--sepia-mid);
+    letter-spacing: 4px;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 38px;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--sepia-dark);
+    font-size: 15px;
+    font-weight: 500;
+    position: relative;
+    padding: 6px 0;
+    transition: color 0.3s;
+  }
+  nav a:hover { color: var(--accent); }
+  nav a::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  nav a:hover::after { width: 100%; }
+  nav a.active { color: var(--accent); }
+  nav a.active::after { width: 100%; }
+
+  /* ===== Hero ===== */
+  .hero {
+    position: relative;
+    height: 92vh;
+    min-height: 640px;
+    background:
+      linear-gradient(rgba(43, 36, 25, 0.62), rgba(43, 36, 25, 0.78)),
+      url('../img/9788951121074_02.jpg') center / cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cream);
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at center, transparent 0%, rgba(43, 36, 25, 0.5) 100%),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 3px);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 30px;
+    border: 1px solid rgba(244, 236, 216, 0.25);
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    padding: 0 30px;
+    animation: fadeUp 1.4s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    letter-spacing: 8px;
+    color: var(--gold);
+    margin-bottom: 28px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: clamp(28px, 4.5vw, 78px);
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 30px;
+    letter-spacing: 4px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+    white-space: nowrap;
+  }
+  .hero h1 .name {
+    color: var(--gold);
+    display: block;
+    margin-top: 8px;
+  }
+  .hero .tagline {
+    font-size: 18px;
+    line-height: 2;
+    color: rgba(244, 236, 216, 0.92);
+    margin-bottom: 14px;
+    font-weight: 300;
+    letter-spacing: 2px;
+  }
+  .hero .dates {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    display: inline-block;
+    margin-top: 36px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(184, 147, 90, 0.4);
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--cream);
+    font-size: 11px;
+    letter-spacing: 4px;
+    opacity: 0.7;
+    animation: bob 2s ease-in-out infinite;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(10px); }
+  }
+
+  /* ===== Section Common ===== */
+  .section {
+    padding: 110px 30px;
+    position: relative;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-head {
+    text-align: center;
+    margin-bottom: 70px;
+  }
+  .section-head .label {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--accent);
+    font-size: 18px;
+    letter-spacing: 6px;
+    display: block;
+    margin-bottom: 14px;
+  }
+  .section-head h2 {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--sepia-dark);
+    letter-spacing: 3px;
+    margin-bottom: 22px;
+  }
+  .section-head .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--sepia-light);
+    margin: 0 auto;
+    position: relative;
+  }
+  .section-head .divider::before,
+  .section-head .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  .section-head .divider::before { left: -16px; }
+  .section-head .divider::after  { right: -16px; }
+  .section-head .sub {
+    margin-top: 22px;
+    color: var(--sepia-mid);
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+
+  /* ===== Introduction ===== */
+  .intro {
+    background: var(--cream-light);
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(184, 147, 90, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(139, 69, 19, 0.04) 0%, transparent 40%);
+  }
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 70px;
+    align-items: center;
+  }
+  .intro-photo {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    background: var(--paper);
+    box-shadow:
+      0 20px 50px rgba(58, 47, 37, 0.25),
+      0 0 0 12px var(--cream-light),
+      0 0 0 13px var(--sepia-light);
+    overflow: hidden;
+    transform: rotate(-1.5deg);
+    transition: transform 0.6s;
+  }
+  .intro-photo:hover { transform: rotate(0deg) scale(1.02); }
+  .intro-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .intro-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.12), rgba(58, 47, 37, 0.22));
+    pointer-events: none;
+  }
+  .intro-photo .caption {
+    position: absolute;
+    bottom: 20px; left: 0; right: 0;
+    text-align: center;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    letter-spacing: 3px;
+    z-index: 2;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  }
+  .intro-text h3 {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--sepia-dark);
+    line-height: 1.4;
+    margin-bottom: 28px;
+    letter-spacing: 1px;
+  }
+  .intro-text h3 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .intro-text p {
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 2;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  .intro-text .signature {
+    margin-top: 36px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--accent);
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
+  .intro-text .signature::before { content: '— '; }
+
+  /* ===== Life Gallery ===== */
+  .life {
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(rgba(244, 236, 216, 0.95), rgba(244, 236, 216, 0.95));
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 30px;
+  }
+  .gallery-card {
+    background: var(--cream-light);
+    padding: 0 0 28px;
+    box-shadow: 0 8px 24px rgba(58, 47, 37, 0.12);
+    transition: transform 0.5s, box-shadow 0.5s;
+    cursor: pointer;
+    position: relative;
+  }
+  .gallery-card:nth-child(odd)  { transform: rotate(-0.8deg); }
+  .gallery-card:nth-child(even) { transform: rotate(0.8deg); }
+  .gallery-card:hover {
+    transform: rotate(0) translateY(-8px);
+    box-shadow: 0 20px 40px rgba(58, 47, 37, 0.2);
+  }
+  .gallery-card-img {
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(135deg, #7a6147, #4a3a2a);
+    position: relative;
+    overflow: hidden;
+    filter: sepia(0.3);
+    margin-bottom: 22px;
+  }
+  .gallery-card-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4));
+  }
+  .gallery-card-img .era {
+    position: absolute;
+    top: 14px; left: 14px;
+    background: rgba(244, 236, 216, 0.9);
+    color: var(--sepia-dark);
+    padding: 5px 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    z-index: 2;
+  }
+  .gallery-card-body {
+    padding: 0 18px;
+  }
+  .gallery-card-body .year {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--accent);
+    font-size: 14px;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+  }
+  .gallery-card-body h4 {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 20px;
+    color: var(--sepia-dark);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .gallery-card-body p {
+    color: var(--sepia-mid);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .more-btn-wrap {
+    text-align: center;
+    margin-top: 70px;
+  }
+  .more-btn {
+    display: inline-block;
+    padding: 16px 50px;
+    background: transparent;
+    color: var(--sepia-dark);
+    text-decoration: none;
+    border: 1px solid var(--sepia-mid);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    transition: background 0.4s, color 0.4s, letter-spacing 0.4s;
+  }
+  .more-btn:hover {
+    background: var(--sepia-dark);
+    color: var(--cream);
+    letter-spacing: 6px;
+  }
+
+  /* ===== Verse / Quote ===== */
+  .verse {
+    background: var(--sepia-dark);
+    color: var(--cream);
+    text-align: center;
+    padding: 100px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .verse::before,
+  .verse::after {
+    content: '\201C';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 180px;
+    color: var(--gold);
+    opacity: 0.15;
+    position: absolute;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .verse::before { top: 30px; left: 8%; }
+  .verse::after  { bottom: -50px; right: 8%; transform: scaleX(-1); }
+  .verse blockquote {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: clamp(14px, 2vw, 28px);
+    line-height: 1.8;
+    max-width: 100%;
+    margin: 0 auto;
+    font-weight: 300;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+    white-space: nowrap;
+  }
+  .verse cite {
+    display: block;
+    margin-top: 30px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 18px;
+    letter-spacing: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== Archive / Chatbot Entry ===== */
+  .archive {
+    background: var(--cream-light);
+  }
+  .archive-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 20px;
+  }
+  .archive-card {
+    background: linear-gradient(135deg, var(--cream-light) 0%, var(--paper) 100%);
+    padding: 60px 50px;
+    border: 1px solid rgba(107, 86, 64, 0.2);
+    position: relative;
+    transition: transform 0.5s, box-shadow 0.5s;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    display: block;
+  }
+  .archive-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--accent));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s;
+  }
+  .archive-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(58, 47, 37, 0.18);
+  }
+  .archive-card:hover::before { transform: scaleX(1); }
+  .archive-card .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 56px;
+    color: var(--gold);
+    opacity: 0.5;
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .archive-card h3 {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 26px;
+    color: var(--sepia-dark);
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+  .archive-card p {
+    color: var(--sepia-mid);
+    font-size: 15px;
+    line-height: 1.9;
+    margin-bottom: 30px;
+    min-height: 80px;
+  }
+  .archive-card .enter {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--accent);
+    font-size: 13px;
+    letter-spacing: 4px;
+    font-weight: 600;
+    transition: gap 0.4s;
+  }
+  .archive-card:hover .enter { gap: 22px; }
+  .archive-card .enter .arrow {
+    display: inline-block;
+    width: 30px; height: 1px;
+    background: var(--accent);
+    position: relative;
+  }
+  .archive-card .enter .arrow::after {
+    content: '';
+    position: absolute;
+    right: 0; top: -3px;
+    width: 8px; height: 8px;
+    border-top: 1px solid var(--accent);
+    border-right: 1px solid var(--accent);
+    transform: rotate(45deg);
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    background: var(--ink);
+    color: rgba(244, 236, 216, 0.7);
+    padding: 60px 30px 30px;
+    text-align: center;
+  }
+  footer .container { max-width: 1100px; }
+  footer .footer-logo {
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 22px;
+    color: var(--gold);
+    letter-spacing: 6px;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  footer p { font-size: 13px; line-height: 1.9; letter-spacing: 1px; }
+  footer .bottom {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(244, 236, 216, 0.1);
+    font-size: 12px;
+    opacity: 0.6;
+    letter-spacing: 2px;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 900px) {
+    .intro-grid, .archive-grid { grid-template-columns: 1fr; gap: 50px; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    nav ul { display: none; }
+    .hero h1 { letter-spacing: 2px; }
+    .section { padding: 80px 20px; }
+    .section-head h2 { font-size: 30px; }
+    .verse blockquote { font-size: clamp(11px, 3.5vw, 20px); letter-spacing: 0; }
+    .top-bar .container { flex-direction: column; gap: 5px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="container">
+    <span>이일선 목사 디지털 아카이브 · The Reverend Lee Il-sun Digital Archive</span>
+    <div>
+      <a href="#intro">소개</a>
+      <a href="#life">생애</a>
+      <a href="#archive">아카이브</a>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="nav-container">
+    <a href="#" class="logo">
+      <span>
+        이일선 목사
+        <small>REV. LEE IL-SUN</small>
+      </span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#intro">목사 소개</a></li>
+        <li><a href="#life">생애와 목회</a></li>
+        <li><a href="#verse">말씀</a></li>
+        <li><a href="#archive">디지털 아카이브</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="eyebrow">In Memoriam &middot; Digital Archive</div>
+    <h1>
+      한 시대의 신앙을 기록하다
+      <span class="name">목사 이일선</span>
+    </h1>
+    <p class="tagline">사진과 기록으로 만나는 한 목회자의 발자취</p>
+    <p class="tagline" style="font-size:15px; opacity:0.8;">그의 삶은 곧 한국 교회의 한 페이지였다</p>
+    <div class="dates">A LIFE OF FAITH &middot; MINISTRY &middot; LEGACY</div>
+  </div>
+  <div class="scroll-indicator">SCROLL DOWN ▼</div>
+</section>
+
+<!-- Introduction -->
+<section class="section intro" id="intro">
+  <div class="container">
+    <div class="section-head">
+      <span class="label">Chapter One</span>
+      <h2>이일선 목사 소개</h2>
+      <div class="divider"></div>
+      <p class="sub">시대의 어둠 속에서 빛을 비춘 목회자의 삶</p>
+    </div>
+
+    <div class="intro-grid">
+      <div class="intro-photo">
+        <img src="../img/9788951121074.jpg" alt="등에는 십자가, 입에는 노래 — 이일선 목사의 생애와 목회">
+        <div class="caption">Reverend Lee Il-sun &middot; 1922 — 1995</div>
+      </div>
+      <div class="intro-text">
+        <h3>한 평생을 <em>복음과 민족</em>을 위해<br>걸으신 신앙의 어른</h3>
+        <p>
+          이일선 목사는 격동의 한국 근현대사 한가운데서 복음의 빛을 들고 살아간 목회자였습니다.
+          그는 가난한 이웃과 상처받은 영혼들의 곁을 떠나지 않았으며, 강단에서는 진리를,
+          삶에서는 사랑을 증거한 시대의 종이었습니다.
+        </p>
+        <p>
+          전쟁의 폐허와 분단의 아픔, 그리고 산업화의 격변기 속에서도 그는 한결같이
+          하나님의 말씀을 붙들고 한국 교회의 부흥과 사회 봉사, 그리고 다음 세대의 신앙 계승을 위해
+          헌신하였습니다. 그의 발자취는 한국 교회사의 소중한 한 장으로 남아 있습니다.
+        </p>
+        <p>
+          이 아카이브는 그가 남긴 설교, 사진, 친필 기록, 그리고 그를 기억하는 이들의 증언을
+          한자리에 모아, 그의 신앙과 삶이 오늘 우리에게 어떤 의미로 다가오는지를 함께 묻고자 합니다.
+        </p>
+        <div class="signature">그의 삶은 우리의 거울입니다</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Life & Ministry Gallery -->
+<section class="section life" id="life">
+  <div class="container">
+    <div class="section-head">
+      <span class="label">Chapter Two</span>
+      <h2>사진과 기록으로 보는 생애와 목회</h2>
+      <div class="divider"></div>
+      <p class="sub">시간의 결을 따라 펼쳐지는 한 목회자의 여정</p>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-card">
+        <div class="gallery-card-img">
+          <span class="era">1920s — 1940s</span>
+        </div>
+        <div class="gallery-card-body">
+          <div class="year">CHAPTER &middot; ONE</div>
+          <h4>유년과 신앙의 씨앗</h4>
+          <p>일제강점기, 어린 시절 그의 마음에 처음 심긴 복음의 씨앗.
+          가정과 교회에서 자라난 신앙의 뿌리를 살펴봅니다.</p>
+        </div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-card-img">
+          <span class="era">1940s — 1950s</span>
+        </div>
+        <div class="gallery-card-body">
+          <div class="year">CHAPTER &middot; TWO</div>
+          <h4>신학 수업과 소명</h4>
+          <p>해방과 전쟁의 격동기 속에서 신학을 공부하며 목회자의 길을 결단한 시간.
+          그가 받은 부르심의 기록입니다.</p>
+        </div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-card-img">
+          <span class="era">1950s — 1970s</span>
+        </div>
+        <div class="gallery-card-body">
+          <div class="year">CHAPTER &middot; THREE</div>
+          <h4>초기 목회와 개척</h4>
+          <p>폐허 위에서 다시 일어선 한국 교회와 함께한 초기 목회의 발자취.
+          설교 노트와 교회 일지에 담긴 헌신의 흔적.</p>
+        </div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-card-img">
+          <span class="era">1970s — 1990s</span>
+        </div>
+        <div class="gallery-card-body">
+          <div class="year">CHAPTER &middot; FOUR</div>
+          <h4>사회 봉사와 이웃 사랑</h4>
+          <p>산업화의 그늘 아래 소외된 이웃들을 향해 열려 있던 그의 손길.
+          말씀을 삶으로 옮긴 실천의 기록.</p>
+        </div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-card-img">
+          <span class="era">1990s — 2000s</span>
+        </div>
+        <div class="gallery-card-body">
+          <div class="year">CHAPTER &middot; FIVE</div>
+          <h4>후학 양성과 가르침</h4>
+          <p>다음 세대의 목회자들을 위한 강의와 멘토링.
+          그가 전해준 신앙의 유산은 오늘도 이어지고 있습니다.</p>
+        </div>
+      </div>
+
+      <div class="gallery-card">
+        <div class="gallery-card-img">
+          <span class="era">Legacy</span>
+        </div>
+        <div class="gallery-card-body">
+          <div class="year">CHAPTER &middot; SIX</div>
+          <h4>남기신 유산</h4>
+          <p>설교문, 친필 서한, 사진, 그리고 그를 기억하는 이들의 증언.
+          한 목회자가 남긴 영적 유산을 한자리에서 만납니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="more-btn-wrap">
+      <a href="#archive" class="more-btn">전체 아카이브 보기</a>
+    </div>
+  </div>
+</section>
+
+<!-- Verse / Quote -->
+<section class="verse" id="verse">
+  <div class="container">
+    <blockquote>
+      내가 달려갈 길과 주 예수께 받은 사명<br>
+      곧 하나님의 은혜의 복음을 증언하는 일을<br>
+      마치려 함에는 나의 생명조차 조금도 귀한 것으로 여기지 아니하노라
+    </blockquote>
+    <cite>— 사도행전 20:24 —</cite>
+  </div>
+</section>
+
+<!-- Archive / Chatbot Entry -->
+<section class="section archive" id="archive">
+  <div class="container">
+    <div class="section-head">
+      <span class="label">Digital Archive</span>
+      <h2>이일선 목사 디지털 아카이브</h2>
+      <div class="divider"></div>
+      <p class="sub">AI와 함께 그의 기록과 말씀을 대화로 만나보세요</p>
+    </div>
+
+    <div class="archive-grid">
+      <a href="연구자용 챗봇(젠스파크).html" class="archive-card">
+        <div class="num">01.</div>
+        <h3>연구자·신학자 아카이브</h3>
+        <p>
+          이일선 목사의 생애와 목회, 설교, 어록을 원문 자료를 기반으로
+          심층 탐구할 수 있는 연구자 전용 AI 챗봇입니다.
+          학술적 질의응답과 문헌 인용을 지원합니다.
+        </p>
+        <span class="enter">
+          ENTER ARCHIVE <span class="arrow"></span>
+        </span>
+      </a>
+
+      <a href="성도용 챗봇(젠스파크).html" class="archive-card">
+        <div class="num">02.</div>
+        <h3>성도 전용 아카이브</h3>
+        <p>
+          교회 성도를 위해 이일선 목사님의 신앙과 삶을 쉽고 따뜻하게
+          나눌 수 있는 성도 전용 AI 챗봇입니다.
+          감동적인 사역 이야기를 함께 나누세요.
+        </p>
+        <span class="enter">
+          MEMBER ACCESS <span class="arrow"></span>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-logo">이 일 선 목 사</div>
+    <p>
+      이일선 목사 디지털 아카이브 &middot; The Reverend Lee Il-sun Digital Archive<br>
+      한 목회자의 신앙과 삶을 사진과 기록으로 기억하는 공간
+    </p>
+    <p class="bottom">
+      © 2026 이일선 목사 기념사업회 &middot; ALL RIGHTS RESERVED
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Smooth anchor scroll with header offset
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href').slice(1);
+      if (!id) return;
+      const el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        const offset = el.getBoundingClientRect().top + window.scrollY - 76;
+        window.scrollTo({ top: offset, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Active nav highlight on scroll
+  const sections = document.querySelectorAll('.section[id]');
+  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 140) cur = s.id;
+    });
+    navLinks.forEach(a => {
+      const isActive = a.getAttribute('href') === '#' + cur;
+      a.classList.toggle('active', isActive);
+    });
+  }, { passive: true });
+</script>
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이일선 목사 디지털 아카이브</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+  :root {
+    --navy:       #1B2A4A;
+    --navy-light: #2A3B5F;
+    --navy-dark:  #0F1E36;
+    --navy-hero:  #1b3a8e;
+    --beige:      #F6F2EA;
+    --beige-2:    #EFE9DC;
+    --beige-dark: #E5DDCB;
+    --gold:       #B8962E;
+    --gold-light: #D4B14A;
+    --gold-soft:  #F2E9CC;
+    --white:      #FFFFFF;
+    --text:       #1F2937;
+    --text-muted: #6B7280;
+    --border:     #E2DBCB;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--beige);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .hero {
+    background: var(--navy-hero);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 80px 24px 60px;
+  }
+
+  /* subtle radial glow */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,255,255,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 50% 90%, rgba(184,150,46,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* subtle grid lines */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ── Cross-bearer SVG ── */
+  .hero-emblem {
+    width: 130px;
+    height: 130px;
+    margin-bottom: 36px;
+    opacity: 0.93;
+    filter: drop-shadow(0 4px 24px rgba(0,0,0,0.3));
+    animation: emblem-in 1s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  @keyframes emblem-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.92); }
+    to   { opacity: 0.93; transform: translateY(0) scale(1); }
+  }
+
+  .hero-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 16px;
+    animation: fade-up 1s 0.2s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: 14px;
+    animation: fade-up 1s 0.35s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(16px, 2.5vw, 22px);
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+    animation: fade-up 1s 0.45s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  .hero-divider {
+    width: 48px;
+    height: 2px;
+    background: var(--gold);
+    margin: 28px auto 28px;
+    border-radius: 1px;
+    animation: fade-up 1s 0.55s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  .hero-desc {
+    max-width: 560px;
+    font-size: 15px;
+    line-height: 1.85;
+    color: rgba(255,255,255,0.68);
+    letter-spacing: -0.005em;
+    animation: fade-up 1s 0.65s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  .hero-cta {
+    margin-top: 44px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fade-up 1s 0.75s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold);
+    color: var(--navy-dark);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    padding: 13px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+    box-shadow: 0 4px 20px rgba(184,150,46,0.35);
+  }
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(184,150,46,0.45);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.85);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    padding: 13px 24px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.18s, border-color 0.18s, transform 0.12s;
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.13);
+    border-color: rgba(255,255,255,0.28);
+    transform: translateY(-2px);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255,255,255,0.35);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    animation: fade-up 1s 1s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .hero-scroll-line {
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+    animation: scroll-line 2s 1.5s ease-in-out infinite;
+  }
+  @keyframes scroll-line {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50%       { opacity: 0.8; transform: scaleY(1.2); }
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NAV BAR ────────────────────────────────────────── */
+  .topnav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 60px;
+    background: rgba(15,30,54,0.75);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.3s;
+  }
+  .topnav.scrolled {
+    background: rgba(15,30,54,0.96);
+  }
+
+  .topnav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .topnav-logo {
+    width: 30px; height: 30px;
+    background: var(--gold);
+    color: var(--navy-dark);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 13px;
+  }
+  .topnav-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .topnav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .topnav-link {
+    color: rgba(255,255,255,0.65);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+    letter-spacing: -0.01em;
+  }
+  .topnav-link:hover {
+    color: rgba(255,255,255,0.95);
+    background: rgba(255,255,255,0.07);
+  }
+
+  /* ── SECTION COMMONS ───────────────────────────────── */
+  .section {
+    padding: 100px 24px;
+  }
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+  .section-lead {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-muted);
+    max-width: 620px;
+    margin-bottom: 52px;
+  }
+
+  /* ── PORTAL CARDS ──────────────────────────────────── */
+  .portal-section {
+    background: var(--beige);
+  }
+
+  .portal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .portal-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
+    position: relative;
+    overflow: hidden;
+  }
+  .portal-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    opacity: 0;
+    transition: opacity 0.22s;
+  }
+  .portal-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(27,42,74,0.14);
+    border-color: var(--beige-dark);
+  }
+  .portal-card:hover::before {
+    opacity: 1;
+  }
+
+  .portal-card-icon {
+    width: 52px; height: 52px;
+    background: var(--navy);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .portal-card-badge {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: rgba(184,150,46,0.12);
+    color: var(--gold);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(184,150,46,0.2);
+  }
+
+  .portal-card-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .portal-card-sub {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.01em;
+    margin-bottom: 12px;
+  }
+  .portal-card-desc {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--text-muted);
+    flex: 1;
+    margin-bottom: 24px;
+  }
+  .portal-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    transition: gap 0.18s;
+  }
+  .portal-card:hover .portal-card-link {
+    gap: 10px;
+  }
+
+  /* ── ABOUT SECTION ─────────────────────────────────── */
+  .about-section {
+    background: var(--navy);
+  }
+  .about-section .section-eyebrow { color: var(--gold-light); }
+  .about-section .section-title { color: var(--white); }
+  .about-section .section-lead { color: rgba(255,255,255,0.62); max-width: 700px; margin-bottom: 0; }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    margin-top: 56px;
+  }
+
+  .about-book {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .book-wrap {
+    position: relative;
+    width: 220px;
+  }
+  .book-shadow {
+    position: absolute;
+    bottom: -20px; left: 10px; right: 10px;
+    height: 40px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 50%;
+    filter: blur(14px);
+  }
+  .book-img {
+    width: 100%;
+    border-radius: 4px 8px 8px 4px;
+    box-shadow:
+      -4px 0 10px rgba(0,0,0,0.4),
+      4px 4px 24px rgba(0,0,0,0.5),
+      8px 8px 40px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+  }
+  .book-wrap:hover .book-img {
+    transform: rotate(-3deg) translateX(-4px);
+  }
+
+  .about-text {}
+  .about-quote {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.65;
+    letter-spacing: -0.02em;
+    border-left: 3px solid var(--gold);
+    padding-left: 20px;
+    margin-bottom: 28px;
+  }
+  .about-body {
+    font-size: 14px;
+    line-height: 1.95;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: -0.005em;
+  }
+  .about-body + .about-body {
+    margin-top: 16px;
+  }
+
+  .about-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 36px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── TIMELINE ──────────────────────────────────────── */
+  .timeline-section {
+    background: var(--beige-2);
+  }
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold) 0%, var(--beige-dark) 100%);
+  }
+  .tl-item {
+    position: relative;
+    padding: 0 0 36px 28px;
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .tl-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-dot {
+    position: absolute;
+    left: -29px; top: 6px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 3px solid var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,150,46,0.15);
+  }
+  .tl-item.major .tl-dot {
+    background: var(--gold);
+    width: 18px; height: 18px;
+    left: -31px; top: 4px;
+  }
+  .tl-year {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .tl-event {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+  .tl-detail {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--text-muted);
+  }
+
+  /* ── FOOTER ────────────────────────────────────────── */
+  .footer {
+    background: var(--navy-dark);
+    padding: 48px 24px 32px;
+    text-align: center;
+  }
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .footer-logo-icon {
+    width: 34px; height: 34px;
+    background: var(--gold);
+    color: var(--navy-dark);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px;
+  }
+  .footer-logo-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+  }
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 28px;
+    letter-spacing: 0.04em;
+  }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .footer-link {
+    color: rgba(255,255,255,0.45);
+    font-size: 12.5px;
+    text-decoration: none;
+    letter-spacing: -0.005em;
+    transition: color 0.15s;
+  }
+  .footer-link:hover { color: rgba(255,255,255,0.75); }
+  .footer-copy {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.01em;
+  }
+
+  /* ── RESPONSIVE ────────────────────────────────────── */
+  @media (max-width: 760px) {
+    .topnav { padding: 0 20px; }
+    .topnav-links { display: none; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .about-book { order: -1; }
+    .book-wrap { width: 170px; }
+    .about-stats { gap: 20px; flex-wrap: wrap; }
+    .section { padding: 72px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── TOP NAV ── -->
+<nav class="topnav" id="topnav">
+  <a href="#" class="topnav-brand">
+    <div class="topnav-logo">이</div>
+    <span class="topnav-name">이일선 목사 디지털 아카이브</span>
+  </a>
+  <div class="topnav-links">
+    <a href="#portal" class="topnav-link">서비스</a>
+    <a href="#about" class="topnav-link">소개</a>
+    <a href="#timeline" class="topnav-link">연보</a>
+    <a href="연구자용 챗봇(젠스파크).html" class="topnav-link">연구자 챗봇</a>
+    <a href="성도용 챗봇(젠스파크).html" class="topnav-link">성도 챗봇</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <!-- Cross-bearer emblem (stylized figure from book cover) -->
+  <svg class="hero-emblem" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <filter id="soft-glow">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <g filter="url(#soft-glow)" fill="#ffffff">
+      <!-- Head -->
+      <circle cx="65" cy="28" r="11"/>
+      <!-- Torso -->
+      <rect x="55" y="40" width="20" height="28" rx="4"/>
+      <!-- Legs -->
+      <path d="M55 66 L42 110 L54 110 L65 78 L76 110 L88 110 L75 66 Z"/>
+      <!-- Cross (carried on back, rotated) -->
+      <g transform="rotate(22, 72, 36)" opacity="0.9">
+        <!-- Vertical beam -->
+        <rect x="69" y="-10" width="8" height="68" rx="2"/>
+        <!-- Horizontal beam -->
+        <rect x="48" y="24" width="52" height="8" rx="2"/>
+      </g>
+    </g>
+    <!-- Gold accent ring -->
+    <circle cx="65" cy="65" r="60" fill="none" stroke="rgba(184,150,46,0.18)" stroke-width="1.5"/>
+    <circle cx="65" cy="65" r="54" fill="none" stroke="rgba(184,150,46,0.08)" stroke-width="1"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-label">Digital Archive · 디지털 아카이브</div>
+    <h1 class="hero-title">이일선 목사 디지털 아카이브</h1>
+    <p class="hero-sub">Rev. Lee Il-sun &nbsp;·&nbsp; 1922 — 1995</p>
+    <div class="hero-divider"></div>
+    <p class="hero-desc">
+      '울릉도의 슈바이처'로 불린 이일선 목사님의 생애와 목회,<br>
+      신앙과 섬김의 기록을 디지털로 보존하고 나눕니다.<br>
+      등에는 십자가를, 입에는 노래를.
+    </p>
+    <div class="hero-cta">
+      <a href="#portal" class="btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        아카이브 둘러보기
+      </a>
+      <a href="#about" class="btn-ghost">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        목사님 소개
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ── PORTAL CARDS ── -->
+<section class="section portal-section" id="portal">
+  <div class="section-inner">
+    <div class="section-eyebrow">Services</div>
+    <h2 class="section-title">아카이브 서비스</h2>
+    <p class="section-lead">이일선 목사님의 자료를 AI 챗봇과 원문 자료실을 통해 탐색하세요. 연구자와 성도 모두를 위한 맞춤 서비스를 제공합니다.</p>
+
+    <div class="portal-grid">
+      <!-- 연구자 챗봇 -->
+      <a href="연구자용 챗봇(젠스파크).html" class="portal-card">
+        <span class="portal-card-badge">AI 챗봇</span>
+        <div class="portal-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4B14A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3 class="portal-card-title">연구자용 챗봇</h3>
+        <div class="portal-card-sub">Researcher RAG Chat</div>
+        <p class="portal-card-desc">이일선 목사님 관련 원문 자료를 기반으로 심층 질의응답이 가능한 연구자 전용 AI 챗봇입니다. 문헌 자료를 인용하며 학술적 탐구를 지원합니다.</p>
+        <span class="portal-card-link">
+          챗봇 열기
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- 성도 챗봇 -->
+      <a href="성도용 챗봇(젠스파크).html" class="portal-card">
+        <span class="portal-card-badge">AI 챗봇</span>
+        <div class="portal-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4B14A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3 class="portal-card-title">성도용 챗봇</h3>
+        <div class="portal-card-sub">Member Chat</div>
+        <p class="portal-card-desc">이일선 목사님의 신앙과 삶에 대해 쉽고 친근하게 이야기 나눌 수 있는 성도 전용 AI 챗봇입니다. 감동적인 사역 이야기를 함께 나누세요.</p>
+        <span class="portal-card-link">
+          챗봇 열기
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- 연구자 젠스파크 -->
+      <a href="chat for theologian.html" class="portal-card">
+        <span class="portal-card-badge">챗봇</span>
+        <div class="portal-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4B14A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3 class="portal-card-title">신학자용 대화 챗봇</h3>
+        <div class="portal-card-sub">Chat for Theologian</div>
+        <p class="portal-card-desc">신학적 연구 관점에서 이일선 목사님의 사역과 신학을 탐구하는 대화형 챗봇입니다. 심층적인 신학 논의를 지원합니다.</p>
+        <span class="portal-card-link">
+          챗봇 열기
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+
+      <!-- 성도 채팅 -->
+      <a href="chat for member.html" class="portal-card">
+        <span class="portal-card-badge">챗봇</span>
+        <div class="portal-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D4B14A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3 class="portal-card-title">성도용 대화 챗봇</h3>
+        <div class="portal-card-sub">Chat for Member</div>
+        <p class="portal-card-desc">교회 성도를 위해 이일선 목사님의 이야기를 쉽고 따뜻하게 나눌 수 있는 대화형 챗봇입니다. 신앙의 여정을 함께하세요.</p>
+        <span class="portal-card-link">
+          챗봇 열기
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section class="section about-section" id="about">
+  <div class="section-inner">
+    <div class="section-eyebrow">About Rev. Lee Il-sun</div>
+    <h2 class="section-title">이일선 목사님은 누구인가</h2>
+    <p class="section-lead">한국교회사의 감추어진 보물, '울릉도의 슈바이처'로 불린 이일선 목사님의 삶과 사역을 만나보세요.</p>
+
+    <div class="about-grid">
+      <div class="about-book">
+        <div class="book-wrap">
+          <div class="book-shadow"></div>
+          <img
+            src="../img/9788951121074.jpg"
+            alt="등에는 십자가, 입에는 노래 — 이일선 목사의 생애와 목회"
+            class="book-img"
+            loading="lazy"
+          >
+        </div>
+      </div>
+
+      <div class="about-text">
+        <blockquote class="about-quote">
+          "예수님을 복음의 중심으로 삼고,<br>
+          주님이 주신 이상을 실현하려는 의지를 가지고<br>
+          등에 무거운 십자가를 진 채 노래하면서<br>
+          한 걸음 내디딘 이일선 목사님의 삶."
+        </blockquote>
+
+        <p class="about-body">
+          1922년 출생하여 1995년 소천한 이일선 목사님은 극심한 가난과 고학 속에서도 신앙으로 일어선 한국 교회의 빛나는 증인이었습니다. 어머니를 통해 배운 신앙, 초등학교 시절의 가난, 슈바이처 박사와의 만남, 신학교 입학과 해방, 이상촌 운동과 열정적인 목회, 6.25 전쟁 중 시작한 의학 공부가 그 삶의 굵직한 이정표였습니다.
+        </p>
+        <p class="about-body">
+          특히 울릉도에서 펼친 헌신적인 사역은 그를 '울릉도의 슈바이처'로 불리게 했습니다. 소병으로 받은 나병 치료 사역, 4.19 혁명 앞에 선 시대적 책임, 심신의 병약함과 미국에서의 목회 등 굴곡진 삶 속에서도 그는 끝까지 십자가를 등에 지고 노래를 잃지 않았습니다.
+        </p>
+
+        <div class="about-stats">
+          <div class="stat">
+            <span class="stat-num">73</span>
+            <span class="stat-label">년간의 생애</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">40+</span>
+            <span class="stat-label">년간의 목회</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">울릉도</span>
+            <span class="stat-label">주요 사역지</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">1922</span>
+            <span class="stat-label">출생 연도</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TIMELINE ── -->
+<section class="section timeline-section" id="timeline">
+  <div class="section-inner">
+    <div class="section-eyebrow">Life Timeline</div>
+    <h2 class="section-title">이일선 목사님 연보</h2>
+    <p class="section-lead">파란만장한 한 생애의 주요 발자취를 따라갑니다.</p>
+
+    <div class="timeline" id="timeline-list">
+      <div class="tl-item major">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1922</div>
+        <div class="tl-event">출생</div>
+        <div class="tl-detail">어머니를 통해 신앙의 씨앗을 심다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1930년대</div>
+        <div class="tl-event">극심한 가난과 고학</div>
+        <div class="tl-detail">초등학교 시절부터 겪은 극심한 가난, 고학으로 배움의 길을 이어가다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1940년대</div>
+        <div class="tl-event">슈바이처 박사와의 만남 · 신학교 입학</div>
+        <div class="tl-detail">슈바이처 박사의 삶에 깊은 감명을 받고 신학교에 입학. 해방의 격동을 신앙으로 맞이하다.</div>
+      </div>
+      <div class="tl-item major">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1950년대</div>
+        <div class="tl-event">6.25 전쟁 · 의학 공부 · 이상촌 운동</div>
+        <div class="tl-detail">전쟁 중에 시작한 의학 공부, 소병으로 받은 나병 치료 사역, 이상촌을 향한 꿈을 키우다.</div>
+      </div>
+      <div class="tl-item major">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1960년대</div>
+        <div class="tl-event">울릉도 사역 · '울릉도의 슈바이처'</div>
+        <div class="tl-detail">울릉도에서 헌신적인 의료·목회 사역을 펼쳐 '울릉도의 슈바이처'라는 이름을 얻다. 4.19 혁명 앞에 선 시대적 책임을 다하다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1970–80년대</div>
+        <div class="tl-event">미국 목회</div>
+        <div class="tl-detail">심신의 병약함 속에서도 미국에서 목회를 이어가며 디아스포라 성도들을 섬기다.</div>
+      </div>
+      <div class="tl-item major">
+        <div class="tl-dot"></div>
+        <div class="tl-year">1995</div>
+        <div class="tl-event">소천</div>
+        <div class="tl-detail">등에는 십자가를, 입에는 노래를 간직한 채 73년의 생애를 마치고 하나님 품으로 돌아가다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-logo">
+    <div class="footer-logo-icon">이</div>
+    <span class="footer-logo-text">이일선 목사 디지털 아카이브</span>
+  </div>
+  <p class="footer-tagline">"등에는 십자가, 입에는 노래" — Rev. Lee Il-sun · 1922–1995</p>
+  <nav class="footer-links">
+    <a href="#portal" class="footer-link">서비스</a>
+    <a href="#about" class="footer-link">소개</a>
+    <a href="#timeline" class="footer-link">연보</a>
+    <a href="연구자용 챗봇(젠스파크).html" class="footer-link">연구자용 챗봇</a>
+    <a href="성도용 챗봇(젠스파크).html" class="footer-link">성도용 챗봇</a>
+    <a href="chat for theologian.html" class="footer-link">신학자용 챗봇</a>
+    <a href="chat for member.html" class="footer-link">성도 대화 챗봇</a>
+  </nav>
+  <p class="footer-copy">© 이일선 목사 디지털 아카이브. All rights reserved.</p>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const topnav = document.getElementById('topnav');
+  window.addEventListener('scroll', () => {
+    topnav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  // Timeline intersection observer
+  const tlItems = document.querySelectorAll('.tl-item');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(tlItems).indexOf(entry.target);
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, idx * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  tlItems.forEach(item => observer.observe(item));
+
+  // Smooth anchor scroll with offset for fixed nav
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        const top = el.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
